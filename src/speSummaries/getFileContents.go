@@ -44,6 +44,8 @@ func readFileContents(summ *Summary) filepath.WalkFunc {
 // "Name","X","Date","CPS","kVp","mA","DC Slit","CC Slit"
 // Called on each file inside WalkFunc closure //
 func getContents(fileName string, fileContents string, summ *Summary) {
+	var Name, X, Date, CPS, kVp, mA, DC, CC string
+	var rowStr string
 	var namePts []string
 	var nextRow string
 
@@ -52,7 +54,7 @@ func getContents(fileName string, fileContents string, summ *Summary) {
 	} else {
 		namePts = strings.Split(fileName, " ")
 	}
-	summ.Name = append(summ.Name, namePts[0])
+	Name = namePts[0]
 
 	fileRows := strings.Split(fileContents, "\n")
 	nRows := len(fileRows)
@@ -60,19 +62,22 @@ func getContents(fileName string, fileContents string, summ *Summary) {
 		nextRow = strings.Replace(fileRows[i+1], "\r", "", -1)
 		nextRow = strings.Replace(nextRow, ",", ".", -1)
 		if strings.Contains(fileRows[i], "$X_Position:") == true {
-			summ.X = append(summ.X, nextRow)
+			X = nextRow
 		} else if strings.Contains(fileRows[i], "$DATE_MEA:") == true {
-			summ.Date = append(summ.Date, nextRow)
+			Date = nextRow
 		} else if strings.Contains(fileRows[i], "$TotalCPS:") == true {
-			summ.CPS = append(summ.CPS, nextRow)
+			CPS = nextRow
 		} else if strings.Contains(fileRows[i], "$ACC_VOLT:") == true {
-			summ.KVp = append(summ.KVp, nextRow)
+			kVp = nextRow
 		} else if strings.Contains(fileRows[i], "$TUBE_CUR:") == true {
-			summ.Curr = append(summ.Curr, nextRow)
+			mA = nextRow
 		} else if strings.Contains(fileRows[i], "$Slit_DC:") == true {
-			summ.DC = append(summ.DC, nextRow)
+			DC = nextRow
 		} else if strings.Contains(fileRows[i], "$Slit_CC:") == true {
-			summ.CC = append(summ.CC, nextRow)
+			CC = nextRow
 		}
 	}
+	rowStr = "{\"Name\":" + Name + ",\"X\":" + X + ",\"Date\":" + Date + ",\"CPS\":" + CPS
+	rowStr = rowStr + ",\"kVp\":" + kVp + ",\"mA\":" + mA + ",\"DC\":" + DC + ",\"CC\":" + CC + "}"
+	summ.Data = append(summ.Data, rowStr)
 }

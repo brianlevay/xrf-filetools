@@ -37,5 +37,10 @@ function currentStds() {
 }
 
 function seeResponse(xhttp) {
-    document.getElementById("errorSect").innerHTML = JSON.parse(xhttp.responseText);
+    var response = JSON.parse(xhttp.response);
+    if (response["Error"] != "none") {
+        document.getElementById("errorSect").innerHTML = ("ERROR: " + response["Error"]);
+    } else {
+        document.getElementById("errorSect").innerHTML = ("DATA: ") + response["Data"][0];
+    }
 }

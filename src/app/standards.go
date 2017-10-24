@@ -11,20 +11,20 @@ func setStandardsHandlers(summ *stds.Summary) {
 		err := r.ParseForm()
 		if err != nil {
 			log.Println(err)
-			w.Write([]byte("{'Error':Unable to parse request}"))
+			w.Write([]byte("{\"Error\":\"Unable to parse request\"}"))
 			return
 		}
 		var sourcePath string
 		sourcePath = r.Form["stdsPath"][0]
 		if sourcePath == "" {
 			log.Println("No path provided for standards.")
-			w.Write([]byte("{'Error':No path provided}"))
+			w.Write([]byte("{\"Error\":\"No path provided\"}"))
 			return
 		}
 		isDir := dirExists(sourcePath)
 		if isDir == false {
 			log.Println("Invalid directory.")
-			w.Write([]byte("{'Error':Invalid directory}"))
+			w.Write([]byte("{\"Error\":\"Invalid directory\"}"))
 			return
 		}
 		summ.Initialize(sourcePath)
