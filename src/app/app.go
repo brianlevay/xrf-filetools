@@ -1,30 +1,38 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"os"
 	stds "speSummaries"
 )
 
 func main() {
-	sourcePath := ".misc/testData"
-	summ := stds.NewSummary(sourcePath)
+	if len(os.Args) < 2 {
+		log.Println("Default path to standards not set")
+		return
+	}
+	defaultPath := os.Args[1]
+	summ := new(stds.Summary)
+	summ.Initialize(defaultPath)
+	summ.RecursiveSearch()
 
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/", fs)
 
-	http.HandleFunc("/all_stds", func(w http.ResponseWriter, r *http.Request) {
-		summ.Reset(sourcePath)
-		summ.RecursiveSearch()
-		fmt.Fprintf(w, summ.JSON())
-	})
+	setStandardsHandlers(summ)
 
-	http.HandleFunc("/update_stds", func(w http.ResponseWriter, r *http.Request) {
-		summ.RecursiveSearch()
-		fmt.Fprintf(w, summ.JSON())
-	})
-
-	log.Println("Listening at localhost:8080")
+	log.Println("Listening at http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
+}
+
+func dirExists(path string) bool {
+	stat, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	if stat.IsDir() == false {
+		return false
+	}
+	return true
 }
