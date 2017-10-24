@@ -1,0 +1,17 @@
+body {
+    position: relative;
+    font-family: Arial, sans-serif;
+}
+
+.tooltip {
+    position: absolute;
+    border: 1px solid grey;
+    border-radius: 3px;
+    box-shadow: 1px 1px grey;
+    padding: 5px;
+    background-color: white;
+}
+
+.chartTitle {
+    font-size: 2em;
+}
