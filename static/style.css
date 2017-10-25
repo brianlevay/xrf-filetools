@@ -3,6 +3,25 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.bodyPt {
+    margin: 0.5em;
+    padding: 0.5em;
+    border: 1px solid grey;
+    border-radius: 2px;
+}
+
+#appHeader {
+    text-align: center;
+}
+
+#appTitle {
+    font-size: 3em;
+}
+
+#navBar {
+    
+}
+
 .navTab {
     display: inline-block;
     cursor: pointer;
@@ -20,6 +39,22 @@ body {
     font-weight: normal;
 }
 
+#stdsPage {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
+#filesPage {
+    display: none;
+}
+
+svg {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
 .tooltip {
     position: absolute;
     border: 1px solid grey;
@@ -31,12 +66,4 @@ body {
 
 .chartTitle {
     font-size: 2em;
-}
-
-#stdsPage {
-    display: block;
-}
-
-#filesPage {
-    display: none;
 }

@@ -7,10 +7,11 @@ SVGheight = 800,
 margin = {top: 100, right: 150, bottom: 100, left: 100},
 width = SVGwidth - margin.left - margin.right,
 height = SVGheight - margin.top - margin.bottom;
-    
+
+let viewBox = "0 0 " + SVGwidth.toString() + " " + SVGheight.toString();
+
 let svg = d3.select("#plotSect").append("svg")
-    .attr("width", SVGwidth)
-    .attr("height", SVGheight)
+    .attr("viewBox", viewBox)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         
