@@ -15,12 +15,11 @@ func main() {
 	defaultPath := os.Args[1]
 	summ := new(stds.Summary)
 	summ.Initialize(defaultPath)
-	summ.RecursiveSearch()
 
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/", fs)
 
-	setStandardsHandlers(summ)
+	setStandardsHandler(summ)
 
 	log.Println("Listening at http://localhost:8080")
 	http.ListenAndServe(":8080", nil)

@@ -1,46 +1,25 @@
-function refreshStds() {
-    var xhttp;
-    xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            seeResponse(this);
-        }
-    };
-    xhttp.open("POST", "/refresh_stds", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    var postStr = "stdsPath=" + document.getElementById("stdsPath").value;
-    xhttp.send(postStr);
-}
+/* global updatePlot */
 
 function updateStds() {
     var xhttp;
     xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            seeResponse(this);
+            handleResponse(this);
         }
     };
-    xhttp.open("GET", "/update_stds", true);
-    xhttp.send();
+    xhttp.open("POST", "/update_stds", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    var postStr = "stdsPath=" + document.getElementById("stdsPath").value;
+    xhttp.send(postStr);
 }
 
-function currentStds() {
-    var xhttp;
-    xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            seeResponse(this);
-        }
-    };
-    xhttp.open("GET", "/current_stds", true);
-    xhttp.send();
-}
-
-function seeResponse(xhttp) {
+function handleResponse(xhttp) {
     var response = JSON.parse(xhttp.response);
     if (response["Error"] != "none") {
         document.getElementById("errorSect").innerHTML = ("ERROR: " + response["Error"]);
     } else {
-        document.getElementById("errorSect").innerHTML = ("DATA: ") + response["Data"][0];
+        document.getElementById("errorSect").innerHTML = "";
+        updatePlot(response["Data"]);
     }
 }

@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Standards Intensity</title>
-        <link rel="stylesheet" href="plot.css">
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <section id="srcPathSect">
@@ -12,16 +12,14 @@
                 <input id="stdsPath" type="text" name="stdsPath">
             </form>
             <div>
-                <button id="refreshStds" type="button" onclick="refreshStds()">Refresh Standards</button>
                 <button id="updateStds" type="button" onclick="updateStds()">Update Standards</button>
-                <button id="currentStds" type="button" onclick="currentStds()">Current Standards</button>
             </div>
         </section>
         <section id="plotSect"></section>
         <section id="errorSect"></section>
         
+        <script src="d3.min.js"></script>
+        <script src="plot.js"></script>
         <script src="controls.js"></script>
-        <!--<script src="d3.min.js"></script>
-        <script src="plot.js"></script>-->
     </body>
 </html>

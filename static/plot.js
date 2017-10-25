@@ -1,12 +1,92 @@
 /* global d3 */
 
+// Initial chart setup //
+
+let SVGwidth = 1200,
+SVGheight = 800,
+margin = {top: 100, right: 150, bottom: 100, left: 100},
+width = SVGwidth - margin.left - margin.right,
+height = SVGheight - margin.top - margin.bottom;
+    
+let svg = d3.select("#plotSect").append("svg")
+    .attr("width", SVGwidth)
+    .attr("height", SVGheight)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        
+let tooltip = d3.select("#plotSect").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+    
+let xValue = function(d) { return d["Date"]; },
+    xScale = d3.scaleTime().range([0, width]),
+    xAxis = d3.axisBottom(xScale),
+    xMap = function(d) { return xScale(xValue(d)); };
+    
+let yValue = function(d) { return d["CPS"]; },
+    yScale = d3.scaleLinear().range([height, 0]),
+    yAxis = d3.axisLeft(yScale),
+    yMap = function(d) { return yScale(yValue(d)); };
+        
+svg.append("g")
+    .attr("class", "xAxis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+    
+svg.append("text")
+    .attr("class", "axisLabel")
+    .attr("transform", "translate(" + (width/2) + " ," + (height + 50) + ")")
+    .style("text-anchor", "middle")
+    .text("Date");
+        
+svg.append("g")
+    .attr("class", "yAxis")
+    .call(yAxis);
+        
+svg.append("text")
+    .attr("class", "axisLabel")
+    .attr("transform", "rotate(-90)")
+    .attr("x", 0 - (height/2))
+    .attr("y", 0 - Math.round((margin.left/1.5)))
+    .style("text-anchor", "middle")
+    .text("CPS");
+    
+svg.append("text")
+    .attr("class", "chartTitle")
+    .attr("transform", "translate(" + (width/2) + ", " + (-20) + ")")
+    .style("text-anchor", "middle")
+    .text("Standards Intensity Through Time");
+        
+let series = [50,100,150];
+let legendY = height - 100;
+let legend = svg.selectAll(".legend")
+    .data(series)
+    .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d,i) { return "translate(0," + (legendY + (i * 25)) + ")"; });
+
+legend.append("rect")
+    .attr("x", width-20)
+    .attr("width", 20)
+    .attr("height", 20)
+    .style("fill", color);
+    
+legend.append("text")
+    .attr("x", width-25)
+    .attr("y", 10)
+    .attr("dy", "0.5em")
+    .style("text-anchor", "end")
+    .text(function(d) { return d; });
+
+// functions for updating the chart and manipulating the data //
+
 function filterPoints(d) {
     let xPass = false;
     let excitePass = false;
     if ((d["X"] == 50) || (d["X"] == 100) || (d["X"] == 150)) {
         xPass = true;
     }
-    if ((d["kVp"] == 9) && (d["mA"] == 0.25) && (d["DC Slit"] == 10) && (d["CC Slit"] == 12)) {
+    if ((d["KVp"] == 9) && (d["Curr"] == 0.25) && (d["DC"] == 10) && (d["CC"] == 12)) {
         excitePass = true;
     }
     return xPass && excitePass;
@@ -47,88 +127,31 @@ function tooltipHTML(d) {
     return html;
 }
 
-//// D3 code modified from http://bl.ocks.org/weiglemc/6185069 ////
-//// Modified for D3 v4 ////
-
-d3.csv("summaries.csv", function(error, data) {
-    if (error) {
-        let errorDiv = document.getElementById("errorSect");
-        errorDiv.innerHTML = "There was an error reading the data file.";
-        return;
-    }
-    
-    let SVGwidth = 1200,
-    SVGheight = 800,
-    margin = {top: 100, right: 150, bottom: 100, left: 100},
-    width = SVGwidth - margin.left - margin.right,
-    height = SVGheight - margin.top - margin.bottom;
-    
-    let svg = d3.select("#plotSect").append("svg")
-        .attr("width", SVGwidth)
-        .attr("height", SVGheight)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        
-    let tooltip = d3.select("#plotSect").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
-    
-    let xValue = function(d) { return d["Date"]; },
-        xScale = d3.scaleTime().range([0, width]),
-        xMap = function(d) { return xScale(xValue(d)); },
-        xAxis = d3.axisBottom(xScale);
-    
-    let yValue = function(d) { return d["CPS"]; },
-        yScale = d3.scaleLinear().range([height, 0]),
-        yMap = function(d) { return yScale(yValue(d)); },
-        yAxis = d3.axisLeft(yScale);
-        
-   // Name,X,Date,CPS,kVp,mA,DC Slit,CC Slit
-    data.forEach(function(d){
-        d["X"] = +d["X"];
-        d["Date"] = parseDate(d["Date"]);
-        d["CPS"] = +d["CPS"];
-        d["kVp"] = +d["kVp"];
-        d["mA"] = +d["mA"];
-        d["DC Slit"] = +d["DC Slit"];
-        d["CC Slit"] = +d["CC Slit"];
+function updatePlot(rawData) {
+    // Name,X,Date,CPS,kVp,mA,DC Slit,CC Slit
+    var data = rawData.map(function(d) {
+        var p = JSON.parse(d);
+        var f = {};
+        f["Name"] = p["Name"];
+        f["X"] = +p["X"];
+        f["Date"] = parseDate(p["Date"]);
+        f["CPS"] = +p["CPS"];
+        f["KVp"] = +p["KVp"];
+        f["Curr"] = +p["Curr"];
+        f["DC"] = +p["DC"];
+        f["CC"] = +p["CC"];
+        return f;
     });
     let filteredData = data.filter(filterPoints);
     xScale.domain([d3.min(data, xValue), d3.max(data, xValue)]);
     yScale.domain([0, (d3.max(data, yValue)*1.1)]);
     
-    svg.append("g")
-        .attr("class", "xAxis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+    var pts = svg.selectAll(".point")
+        .data(filteredData);
+        
+    pts.exit().remove();
     
-    svg.append("text")
-        .attr("class", "axisLabel")
-        .attr("transform", "translate(" + (width/2) + " ," + (height + 50) + ")")
-        .style("text-anchor", "middle")
-        .text("Date");
-        
-    svg.append("g")
-        .attr("class", "yAxis")
-        .call(yAxis);
-        
-    svg.append("text")
-        .attr("class", "axisLabel")
-        .attr("transform", "rotate(-90)")
-        .attr("x", 0 - (height/2))
-        .attr("y", 0 - Math.round((margin.left/1.5)))
-        .style("text-anchor", "middle")
-        .text("CPS");
-    
-    svg.append("text")
-        .attr("class", "chartTitle")
-        .attr("transform", "translate(" + (width/2) + ", " + (-20) + ")")
-        .style("text-anchor", "middle")
-        .text("Standards Intensity Through Time");
-        
-    svg.selectAll(".point")
-        .data(filteredData)
-        .enter().append("circle")
+    pts.enter().append("circle")
         .attr("class", "point")
         .attr("r", 5)
         .attr("cx", xMap)
@@ -143,27 +166,5 @@ d3.csv("summaries.csv", function(error, data) {
         .on("mouseout", function(d) {
             tooltip.style("opacity", 0);
         });
+}
     
-    let series = [50,100,150];
-    let legendY = height - 100;
-    let legend = svg.selectAll(".legend")
-        .data(series)
-        .enter().append("g")
-        .attr("class", "legend")
-        .attr("transform", function(d,i) { return "translate(0," + (legendY + (i * 25)) + ")"; });
-
-    legend.append("rect")
-        .attr("x", width-20)
-        .attr("width", 20)
-        .attr("height", 20)
-        .style("fill", color);
-    
-    legend.append("text")
-        .attr("x", width-25)
-        .attr("y", 10)
-        .attr("dy", "0.5em")
-        .style("text-anchor", "end")
-        .text(function(d) { return d; });
-        
-    return;
-});

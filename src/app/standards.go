@@ -4,10 +4,13 @@ import (
 	"log"
 	"net/http"
 	stds "speSummaries"
+	"strings"
 )
 
-func setStandardsHandlers(summ *stds.Summary) {
-	http.HandleFunc("/refresh_stds", func(w http.ResponseWriter, r *http.Request) {
+func setStandardsHandler(summ *stds.Summary) {
+	http.HandleFunc("/update_stds", func(w http.ResponseWriter, r *http.Request) {
+		summ.Mtx.Lock()
+		defer summ.Mtx.Unlock()
 		err := r.ParseForm()
 		if err != nil {
 			log.Println(err)
@@ -27,17 +30,10 @@ func setStandardsHandlers(summ *stds.Summary) {
 			w.Write([]byte("{\"Error\":\"Invalid directory\"}"))
 			return
 		}
-		summ.Initialize(sourcePath)
+		if strings.Compare(sourcePath, summ.SourcePath) == 0 {
+			summ.Initialize(sourcePath)
+		}
 		summ.RecursiveSearch()
-		w.Write(summ.JSON())
-	})
-
-	http.HandleFunc("/update_stds", func(w http.ResponseWriter, r *http.Request) {
-		summ.RecursiveSearch()
-		w.Write(summ.JSON())
-	})
-
-	http.HandleFunc("/current_stds", func(w http.ResponseWriter, r *http.Request) {
 		w.Write(summ.JSON())
 	})
 }

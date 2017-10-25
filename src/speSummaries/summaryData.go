@@ -2,15 +2,28 @@ package speSummaries
 
 import (
 	"encoding/json"
+	"sync"
 	"time"
 )
 
 type Summary struct {
-	LastDate   time.Time `json:"-"`
-	NextDate   time.Time `json:"-"`
-	SourcePath string    `json:"-"`
-	Error      string    `json:"Error"`
-	Data       []string  `json:"Data"`
+	Mtx        sync.Mutex `json:"-"`
+	LastDate   time.Time  `json:"-"`
+	NextDate   time.Time  `json:"-"`
+	SourcePath string     `json:"-"`
+	Error      string     `json:"Error"`
+	Data       []string   `json:"Data"`
+}
+
+type Row struct {
+	Name string `json:"Name"`
+	X    string `json:"X"`
+	Date string `json:"Date"`
+	CPS  string `json:"CPS"`
+	KVp  string `json:"KVp"`
+	Curr string `json:"Curr"`
+	DC   string `json:"DC"`
+	CC   string `json:"CC"`
 }
 
 func (summ *Summary) JSON() []byte {

@@ -1,6 +1,7 @@
 package speSummaries
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"os"
@@ -14,6 +15,7 @@ func (summ *Summary) RecursiveSearch() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	summ.LastDate = summ.NextDate
 }
 
 // Called on each file during recursiveSearch, uses closure to bind pointer to struct //
@@ -44,8 +46,7 @@ func readFileContents(summ *Summary) filepath.WalkFunc {
 // "Name","X","Date","CPS","kVp","mA","DC Slit","CC Slit"
 // Called on each file inside WalkFunc closure //
 func getContents(fileName string, fileContents string, summ *Summary) {
-	var Name, X, Date, CPS, kVp, mA, DC, CC string
-	var rowStr string
+	var Name, X, Date, CPS, KVp, Curr, DC, CC string
 	var namePts []string
 	var nextRow string
 
@@ -68,16 +69,17 @@ func getContents(fileName string, fileContents string, summ *Summary) {
 		} else if strings.Contains(fileRows[i], "$TotalCPS:") == true {
 			CPS = nextRow
 		} else if strings.Contains(fileRows[i], "$ACC_VOLT:") == true {
-			kVp = nextRow
+			KVp = nextRow
 		} else if strings.Contains(fileRows[i], "$TUBE_CUR:") == true {
-			mA = nextRow
+			Curr = nextRow
 		} else if strings.Contains(fileRows[i], "$Slit_DC:") == true {
 			DC = nextRow
 		} else if strings.Contains(fileRows[i], "$Slit_CC:") == true {
 			CC = nextRow
 		}
 	}
-	rowStr = "{\"Name\":" + Name + ",\"X\":" + X + ",\"Date\":" + Date + ",\"CPS\":" + CPS
-	rowStr = rowStr + ",\"kVp\":" + kVp + ",\"mA\":" + mA + ",\"DC\":" + DC + ",\"CC\":" + CC + "}"
-	summ.Data = append(summ.Data, rowStr)
+
+	row := &Row{Name: Name, X: X, Date: Date, CPS: CPS, KVp: KVp, Curr: Curr, DC: DC, CC: CC}
+	rowJSON, _ := json.Marshal(row)
+	summ.Data = append(summ.Data, string(rowJSON))
 }
