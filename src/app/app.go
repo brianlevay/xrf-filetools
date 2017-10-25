@@ -8,17 +8,11 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		log.Println("Default path to standards not set")
-		return
-	}
-	defaultPath := os.Args[1]
-	summ := new(stds.Summary)
-	summ.Initialize(defaultPath)
-
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/", fs)
 
+	summ := new(stds.Summary)
+	summ.Initialize("test")
 	setStandardsHandler(summ)
 
 	log.Println("Listening at http://localhost:8080")

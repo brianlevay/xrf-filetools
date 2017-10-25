@@ -30,7 +30,7 @@ func setStandardsHandler(summ *stds.Summary) {
 			w.Write([]byte("{\"Error\":\"Invalid directory\"}"))
 			return
 		}
-		if strings.Compare(sourcePath, summ.SourcePath) == 0 {
+		if strings.Compare(sourcePath, summ.SourcePath) != 0 {
 			summ.Initialize(sourcePath)
 		}
 		summ.RecursiveSearch()
