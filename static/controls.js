@@ -1,5 +1,38 @@
 /* global updatePlot */
 
+//// Page Controls ////
+
+let stdsTab = document.getElementById("stdsTab");
+let stdsPage = document.getElementById("stdsPage");
+let filesTab = document.getElementById("filesTab");
+let filesPage = document.getElementById("filesPage");
+
+stdsTab.onclick = function() {
+    activateTab(stdsTab, stdsPage, true);
+    activateTab(filesTab, filesPage, false);
+};
+
+filesTab.onclick = function() {
+    activateTab(stdsTab, stdsPage, false);
+    activateTab(filesTab, filesPage, true);
+};
+
+function activateTab(tabObj, pageObj, activate) {
+    if (activate == true) {
+        tabObj.style.backgroundColor = "black";
+        tabObj.style.color = "white";
+        tabObj.style.fontWeight = "bold";
+        pageObj.style.display = "block";
+    } else {
+        tabObj.style.backgroundColor = "white";
+        tabObj.style.color = "black";
+        tabObj.style.fontWeight = "normal";
+        pageObj.style.display = "none";
+    }
+}
+
+//// Server Calls ////
+
 function updateStds() {
     var xhttp;
     xhttp = new XMLHttpRequest();

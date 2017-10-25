@@ -3,6 +3,23 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.navTab {
+    display: inline-block;
+    cursor: pointer;
+}
+
+#stdsTab {
+    background-color: black;
+    color: white;
+    font-weight: bold;
+}
+
+#filesTab {
+    background-color: white;
+    color: black;
+    font-weight: normal;
+}
+
 .tooltip {
     position: absolute;
     border: 1px solid grey;
@@ -14,4 +31,12 @@ body {
 
 .chartTitle {
     font-size: 2em;
+}
+
+#stdsPage {
+    display: block;
+}
+
+#filesPage {
+    display: none;
 }

@@ -2,24 +2,42 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Standards Intensity</title>
+        <title>XRF File Tools</title>
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <section id="srcPathSect">
-            <form>
-                <span>Path to Standards:</span>
-                <input id="stdsPath" type="text" name="stdsPath">
-            </form>
-            <div>
-                <button id="updateStds" type="button" onclick="updateStds()">Update Standards</button>
-            </div>
+        <section id="appHeader">
+            <div id="appTitle">XRF File Tools</div>
+            <div id="appDesc">A suite of tools to help you make the most of your data in the XRF core scanning lab</div>
         </section>
-        <section id="plotSect"></section>
-        <section id="errorSect"></section>
+        <section id="navBar">
+            <div id="stdsTab" class="navTab">Standards Intensities</div>
+            <div id="filesTab" class="navTab">File Manipulation</div>
+        </section>
+        <section id="content">
+            <section id="errorSect"></section>
+            <section id="stdsPage" class="page">
+                <section id="srcPathSect">
+                    <form>
+                        <span>Path to Standards:</span><br>
+                        <input id="stdsPath" type="text" name="stdsPath">
+                    </form>
+                    <div>
+                        <button id="updateStds" type="button" onclick="updateStds()">Update Standards</button>
+                    </div>
+                </section>
+                <section id="plotSect"></section>    
+            </section>
+            <section id="filesPage" class="page">
+                Files Page
+            </section>    
+        </section>
+        <section id="footer">
+            Created by Brian LeVay (2017)
+        </section>
         
+        <script src="controls.js"></script>
         <script src="d3.min.js"></script>
         <script src="plot.js"></script>
-        <script src="controls.js"></script>
     </body>
 </html>
