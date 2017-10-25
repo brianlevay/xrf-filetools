@@ -1,34 +1,40 @@
 body {
     position: relative;
     font-family: Arial, sans-serif;
+    background-color: #dddfd4;
 }
 
 .bodyPt {
-    margin: 0.5em;
-    padding: 0.5em;
+    margin: 0px;
+    padding: 5px;
     border: 1px solid grey;
     border-radius: 2px;
 }
 
 #appHeader {
     text-align: center;
+    background-color: #173e43;
+    color: white;
 }
 
 #appTitle {
     font-size: 3em;
+    font-weight: bold;
 }
 
 #navBar {
-    
+    background-color: #fae596;
 }
 
 .navTab {
     display: inline-block;
     cursor: pointer;
+    padding: 0.5em;
+    border-radius: 2px;
 }
 
 #stdsTab {
-    background-color: black;
+    background-color: #3fb0ac;
     color: white;
     font-weight: bold;
 }
@@ -53,6 +59,7 @@ svg {
     display: block;
     position: relative;
     width: 100%;
+    background-color: white;
 }
 
 .tooltip {
@@ -66,4 +73,10 @@ svg {
 
 .chartTitle {
     font-size: 2em;
+}
+
+#footer {
+    background-color: #173e43;
+    color: white;
+    font-size: 0.8em;
 }

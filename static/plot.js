@@ -14,7 +14,7 @@ let svg = d3.select("#plotSect").append("svg")
     .attr("viewBox", viewBox)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        
+  
 let tooltip = d3.select("#plotSect").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
