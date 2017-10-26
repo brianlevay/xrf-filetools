@@ -42,7 +42,7 @@ func getUniqueName(fileName string, path string, unique *UniqueNames) {
 	}
 	Name = namePts[0]
 
-	pathPts = filepath.SplitList(path)
+	pathPts = strings.Split(path, string(os.PathSeparator))
 	pathLength = len(pathPts)
 	switch pathLength {
 	case 0:
