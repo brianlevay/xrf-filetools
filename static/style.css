@@ -65,10 +65,14 @@ body {
     padding: 10px;
 }
 
-input {
+input[type="text"] {
     width: 50%;
     min-width: 400px;
     margin: 5px;
+}
+
+.inputDiv span {
+    font-size: 1.0em;
 }
 
 button {

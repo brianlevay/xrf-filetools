@@ -30,6 +30,17 @@
             </section>
             <section id="filesPage" class="page">
                 <section id="getNamesSect">
+                    <div class="inputDesc">
+                        <h3>Generate a List of Unique Sample Names from SPE Files</h3>
+                        <p>Use this tool to generate a csv file containing a list of 
+                        unique sample names in the form of pairs: (FolderName, SampleName). 
+                        The reason that the folder name is included is that sometimes the 
+                        sample is misnamed, and you can tell from the parent or grandparent 
+                        folder name what the correct name <i>should</i> be. This list can be 
+                        used for your own information, or you can add a "New Name" next 
+                        to each row and feed the list back into the copy and rename tool 
+                        below.</p>
+                    </div>
                     <div class="inputDiv">
                         <span>Path to Original SPE Files:</span><br>
                         <input id="srcPathNames" type="text" name="srcPathNames">
@@ -39,11 +50,53 @@
                         <input id="outPathNames" type="text" name="outPathNames">
                     </div>
                     <div class="inputDiv">
-                        <span>Output File Name:</span><br>
-                        <input id="outFileNames" type="text" name="outFilehNames">
+                        <span>Output File Name (.csv automatically included):</span><br>
+                        <input id="outFileNames" type="text" name="outFileNames">
                     </div>
                     <div class="buttonDiv">
                         <button id="getNames" type="button" onclick="uniqueNames()">Get Names</button>
+                    </div>
+                </section>
+                <section id="sortRenameSect">
+                    <div class="inputDesc">
+                        <h3>Sort SPE Files by Excitation and Rename If Desired</h3>
+                        <p>This section allows you to sort SPE files from all of their 
+                        currently nested structures into one set of folders based on 
+                        voltage and filter. This means you can process files in just a 
+                        few batches, rather than have to select a section, select an 
+                        energy, and repeat ad nauseam. The process creates copies of 
+                        the files, rather than moving the originals. If, during the 
+                        copying process you'd like to rename the files, you can 
+                        provide a csv file that has the following columns: 
+                        (FolderName, SampleName, NewName). The folder name and 
+                        sample name columns represent unique pairs from the original 
+                        source directory. Only files that match one of the 
+                        (FolderName, SampleName) pairs will be copied and renamed 
+                        if you select this option. Otherwise, you can uncheck the 
+                        box for renaming and just copy everything as is. All 
+                        commas will be replaced in the file name during copy, 
+                        regardless.</p>
+                    </div>
+                    <div class="inputDiv">
+                        <span>Path to Original SPE Files:</span><br>
+                        <input id="srcPathSort" type="text" name="srcPathSort">
+                    </div>
+                    <div class="inputDiv">
+                        <span>Path to Save Output:</span><br>
+                        <input id="outPathSort" type="text" name="outPathSort">
+                    </div>
+                    <div class="inputDiv">
+                        <br>
+                        <span>Rename during copy?</span>
+                        <input id="renameCheckBox" type="checkbox" name="toRename" value="rename">
+                        <br><br>
+                    </div>
+                    <div class="inputDiv">
+                        <span>Path to File with Matched Names:</span><br>
+                        <input id="matchedFileSort" type="text" name="matchedFileSort">
+                    </div>
+                    <div class="buttonDiv">
+                        <button id="sortFiles" type="button" onclick="sortFiles()">Sort Files</button>
                     </div>
                 </section>
             </section>    

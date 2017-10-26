@@ -94,3 +94,39 @@ function handleNamesResponse(xhttp) {
         alert("Finished!");
     }
 }
+
+function sortFiles() {
+    let srcPath = document.getElementById("srcPathSort").value;
+    let outPath = document.getElementById("outPathSort").value;
+    let toRename = document.getElementById("renameCheckBox").checked;
+    let matchedFile = document.getElementById("matchedFileSort").value;
+    let postStr = encodeURI("srcPath=" + srcPath + "&outPath=" + outPath + "&toRename=" + toRename + "&matchedFile=" + matchedFile);
+    if ((srcPath == "") || (outPath == "")) {
+        document.getElementById("errorSect").innerHTML = ("ERROR: " + "Source and/or output path missing");
+        return;
+    }
+    if ((toRename == true) && (matchedFile == "")) {
+        document.getElementById("errorSect").innerHTML = ("ERROR: " + "No path provided for matched names file");
+        return;
+    }
+    var xhttp;
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            handleSortResponse(this);
+        }
+    };
+    xhttp.open("POST", "/unique_names", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(postStr);
+}
+
+function handleSortResponse(xhttp) {
+    let response = JSON.parse(xhttp.response);
+    if (response["Error"] != "none") {
+        document.getElementById("errorSect").innerHTML = ("ERROR: " + response["Error"]);
+    } else {
+        document.getElementById("errorSect").innerHTML = "";
+        alert("Finished!");
+    }
+}
