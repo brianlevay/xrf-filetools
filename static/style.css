@@ -1,29 +1,32 @@
+
 body {
     position: relative;
+    margin: 0px;
     font-family: Arial, sans-serif;
-    background-color: #dddfd4;
+    background-color: white;
 }
 
 .bodyPt {
     margin: 0px;
     padding: 5px;
-    border: 1px solid grey;
-    border-radius: 2px;
+    background-color: #EEEEEE;
 }
 
 #appHeader {
+    padding: 20px;
     text-align: center;
-    background-color: #173e43;
+    background-color: #444444;
     color: white;
 }
 
 #appTitle {
     font-size: 3em;
     font-weight: bold;
+    text-shadow: 0px 0px 5px black;
 }
 
 #navBar {
-    background-color: #fae596;
+    background-color: #AAAAAA;
 }
 
 .navTab {
@@ -34,7 +37,7 @@ body {
 }
 
 #stdsTab {
-    background-color: #3fb0ac;
+    background-color: black;
     color: white;
     font-weight: bold;
 }
@@ -45,14 +48,36 @@ body {
     font-weight: normal;
 }
 
+#errorSect {
+    margin: 10px;
+    font-size: 0.9em;
+    background-color: maroon;
+    color: white;
+}
+
 #stdsPage {
     display: block;
     position: relative;
     width: 100%;
 }
 
-#filesPage {
-    display: none;
+#stdsPathSect {
+    padding: 10px;
+}
+
+input {
+    width: 50%;
+    min-width: 400px;
+    margin: 5px;
+}
+
+button {
+    margin: 5px;
+    padding: 5px;
+    background-color: green;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9em;
 }
 
 svg {
@@ -75,8 +100,13 @@ svg {
     font-size: 2em;
 }
 
+#filesPage {
+    display: none;
+}
+
 #footer {
-    background-color: #173e43;
+    text-align: center;
+    background-color: black;
     color: white;
     font-size: 0.8em;
 }

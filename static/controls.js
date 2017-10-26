@@ -19,7 +19,7 @@ filesTab.onclick = function() {
 
 function activateTab(tabObj, pageObj, activate) {
     if (activate == true) {
-        tabObj.style.backgroundColor = "#3fb0ac";
+        tabObj.style.backgroundColor = "black";
         tabObj.style.color = "white";
         tabObj.style.fontWeight = "bold";
         pageObj.style.display = "block";

@@ -11,6 +11,7 @@ height = SVGheight - margin.top - margin.bottom;
 let viewBox = "0 0 " + SVGwidth.toString() + " " + SVGheight.toString();
 
 let svg = d3.select("#plotSect").append("svg")
+    .attr("id", "plot")
     .attr("viewBox", viewBox)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -19,20 +20,16 @@ let tooltip = d3.select("#plotSect").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
     
-let xValue = function(d) { return d["Date"]; },
-    xScale = d3.scaleTime().range([0, width]),
-    xAxis = d3.axisBottom(xScale),
-    xMap = function(d) { return xScale(xValue(d)); };
+let xScaleInit = d3.scaleTime().range([0, width]),
+    xAxisInit = d3.axisBottom(xScaleInit);
     
-let yValue = function(d) { return d["CPS"]; },
-    yScale = d3.scaleLinear().range([height, 0]),
-    yAxis = d3.axisLeft(yScale),
-    yMap = function(d) { return yScale(yValue(d)); };
+let yScaleInit = d3.scaleLinear().range([height, 0]),
+    yAxisInit = d3.axisLeft(yScaleInit);
         
 svg.append("g")
     .attr("class", "xAxis")
     .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
+    .call(xAxisInit);
     
 svg.append("text")
     .attr("class", "axisLabel")
@@ -42,7 +39,7 @@ svg.append("text")
         
 svg.append("g")
     .attr("class", "yAxis")
-    .call(yAxis);
+    .call(yAxisInit);
         
 svg.append("text")
     .attr("class", "axisLabel")
@@ -144,14 +141,26 @@ function updatePlot(rawData) {
         return f;
     });
     let filteredData = data.filter(filterPoints);
-    xScale.domain([d3.min(data, xValue), d3.max(data, xValue)]);
-    yScale.domain([0, (d3.max(data, yValue)*1.1)]);
+    
+    let xValue = function(d) { return d["Date"]; };
+    let xScale = d3.scaleTime().range([0, width]);
+    let xAxis = d3.axisBottom(xScale);
+    let xMap = function(d) { return xScale(xValue(d)); };
+    xScale.domain([d3.min(filteredData, xValue), d3.max(filteredData, xValue)]);
+    
+    let yValue = function(d) { return d["CPS"]; };
+    let yScale = d3.scaleLinear().range([height, 0]);
+    let yAxis = d3.axisLeft(yScale);
+    let yMap = function(d) { return yScale(yValue(d)); };
+    yScale.domain([0, (d3.max(filteredData, yValue)*1.1)]);
+    
+    let plotSect = document.getElementById("plotSect");
+    let plotRect = plotSect.getBoundingClientRect();
     
     var pts = svg.selectAll(".point")
         .data(filteredData);
-        
-    pts.exit().remove();
     
+    pts.exit().remove();
     pts.enter().append("circle")
         .attr("class", "point")
         .attr("r", 5)
@@ -160,12 +169,19 @@ function updatePlot(rawData) {
         .style("fill", function(d) { return color(d["X"]); })
         .on("mouseover", function(d) {
             tooltip.html(tooltipHTML(d))
-                .style("left", (d3.event.pageX + 20) + "px")
-                .style("top", (d3.event.pageY - 30) + "px")
+                .style("left", (d3.event.pageX + 5) + "px")
+                .style("top", (d3.event.pageY - plotRect.y) + "px")
                 .style("opacity", 0.9);
         })
         .on("mouseout", function(d) {
             tooltip.style("opacity", 0);
         });
+        
+    svg.select(".xAxis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+    
+    svg.select(".yAxis")
+        .call(yAxis);
 }
     
