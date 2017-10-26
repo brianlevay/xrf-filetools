@@ -10,11 +10,13 @@ let filesPage = document.getElementById("filesPage");
 stdsTab.onclick = function() {
     activateTab(stdsTab, stdsPage, true);
     activateTab(filesTab, filesPage, false);
+    document.getElementById("errorSect").innerHTML = "";
 };
 
 filesTab.onclick = function() {
     activateTab(stdsTab, stdsPage, false);
     activateTab(filesTab, filesPage, true);
+    document.getElementById("errorSect").innerHTML = "";
 };
 
 function activateTab(tabObj, pageObj, activate) {
@@ -34,25 +36,61 @@ function activateTab(tabObj, pageObj, activate) {
 //// Server Calls ////
 
 function updateStds() {
-    var xhttp;
-    xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            handleResponse(this);
-        }
-    };
-    xhttp.open("POST", "/update_stds", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    var postStr = "stdsPath=" + document.getElementById("stdsPath").value;
-    xhttp.send(postStr);
+    let stdsPath = document.getElementById("stdsPath").value;
+    let postStr = encodeURI("stdsPath=" + stdsPath);
+    if (stdsPath == "") {
+        document.getElementById("errorSect").innerHTML = ("ERROR: " + "No path provided for standards");
+    } else {
+        var xhttp;
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                handlePlotResponse(this);
+            }
+        };
+        xhttp.open("POST", "/update_stds", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(postStr);
+    }
 }
 
-function handleResponse(xhttp) {
-    var response = JSON.parse(xhttp.response);
+function handlePlotResponse(xhttp) {
+    let response = JSON.parse(xhttp.response);
     if (response["Error"] != "none") {
         document.getElementById("errorSect").innerHTML = ("ERROR: " + response["Error"]);
     } else {
         document.getElementById("errorSect").innerHTML = "";
         updatePlot(response["Data"]);
+    }
+}
+
+function uniqueNames() {
+    let srcPath = document.getElementById("srcPathNames").value;
+    let outPath = document.getElementById("outPathNames").value;
+    let outFile = document.getElementById("outFileNames").value;
+    let postStr = encodeURI("srcPath=" + srcPath + "&outPath=" + outPath + "&outName=" + outFile);
+    if ((srcPath == "") || (outPath == "")) {
+        document.getElementById("errorSect").innerHTML = ("ERROR: " + "Source and/or output path missing");
+    } else {
+        var xhttp;
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                handleNamesResponse(this);
+            }
+        };
+        xhttp.open("POST", "/unique_names", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(postStr);
+    }
+}
+
+function handleNamesResponse(xhttp) {
+    let response = JSON.parse(xhttp.response);
+    if (response["Error"] != "none") {
+        document.getElementById("errorSect").innerHTML = ("ERROR: " + response["Error"]);
+    } else {
+        document.getElementById("errorSect").innerHTML = "";
+        alert("Finished!");
     }
 }

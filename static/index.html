@@ -18,18 +18,34 @@
             <section id="errorSect"></section>
             <section id="stdsPage" class="page">
                 <section id="stdsPathSect">
-                    <form>
+                    <div class="inputDiv">
                         <span>Path to Standards:</span><br>
                         <input id="stdsPath" type="text" name="stdsPath">
-                    </form>
-                    <div>
+                    </div>
+                    <div class="buttonDiv">
                         <button id="updateStds" type="button" onclick="updateStds()">Update Standards</button>
                     </div>
                 </section>
                 <section id="plotSect"></section>    
             </section>
             <section id="filesPage" class="page">
-                Files Page coming soon!
+                <section id="getNamesSect">
+                    <div class="inputDiv">
+                        <span>Path to Original SPE Files:</span><br>
+                        <input id="srcPathNames" type="text" name="srcPathNames">
+                    </div>
+                    <div class="inputDiv">
+                        <span>Path to Save Output:</span><br>
+                        <input id="outPathNames" type="text" name="outPathNames">
+                    </div>
+                    <div class="inputDiv">
+                        <span>Output File Name:</span><br>
+                        <input id="outFileNames" type="text" name="outFilehNames">
+                    </div>
+                    <div class="buttonDiv">
+                        <button id="getNames" type="button" onclick="uniqueNames()">Get Names</button>
+                    </div>
+                </section>
             </section>    
         </section>
         <section id="footer" class="bodyPt">
