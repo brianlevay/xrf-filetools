@@ -12,10 +12,10 @@ func main() {
 	http.Handle("/", fs)
 
 	summ := new(stds.Summary)
-	summ.Initialize("test")
+	summ.Initialize("")
 	setStandardsHandler(summ)
 
-	setUniqueNamesHandler()
+	setUniqueHandler()
 
 	log.Println("Listening at http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
