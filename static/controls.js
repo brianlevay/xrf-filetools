@@ -79,7 +79,7 @@ function uniqueNames() {
                 handleNamesResponse(this);
             }
         };
-        xhttp.open("POST", "/unique_names", true);
+        xhttp.open("POST", "/sample_stats", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(postStr);
     }

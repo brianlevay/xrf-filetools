@@ -15,7 +15,7 @@ func main() {
 	through.Initialize("")
 	setStandardsHandler(through)
 
-	setUniqueHandler()
+	setSampleStatsHandler()
 
 	log.Println("Listening at http://localhost:8080")
 	http.ListenAndServe(":8080", nil)

@@ -3,12 +3,12 @@ package main
 import (
 	"log"
 	"net/http"
-	samples "sampleSummaries"
+	stats "sampleStats"
 	"strings"
 )
 
-func setUniqueHandler() {
-	http.HandleFunc("/sample_summaries", func(w http.ResponseWriter, r *http.Request) {
+func setSampleStatsHandler() {
+	http.HandleFunc("/sample_stats", func(w http.ResponseWriter, r *http.Request) {
 		errP := r.ParseForm()
 		if errP != nil {
 			log.Println(errP)
@@ -37,14 +37,14 @@ func setUniqueHandler() {
 			return
 		}
 		if outName == "" {
-			outName = "unique_names"
+			outName = "sample_stats"
 		}
 		outName = strings.Split(outName, ".")[0] + ".csv"
 
-		unique := new(names.UniqueNames)
-		unique.Initialize(sourcePath)
-		unique.RecursiveSearch()
-		errW := unique.WriteToCSV(outPath, outName)
+		samples := new(stats.SampleStats)
+		samples.Initialize(sourcePath)
+		samples.RecursiveSearch()
+		errW := samples.WriteToCSV(outPath, outName)
 		if errW != nil {
 			log.Println(errW)
 			w.Write([]byte("{\"Error\":\"Unable to save csv file\"}"))
