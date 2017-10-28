@@ -169,8 +169,8 @@ function updatePlot(rawData) {
         .style("fill", function(d) { return color(d["X"]); })
         .on("mouseover", function(d) {
             tooltip.html(tooltipHTML(d))
-                .style("left", (d3.event.pageX + 5) + "px")
-                .style("top", (d3.event.pageY - plotRect.y) + "px")
+                .style("left", (d3.event.pageX - plotRect.x + 5) + "px")
+                .style("top", (d3.event.pageY - plotRect.y + margin["top"]) + "px")
                 .style("opacity", 0.9);
         })
         .on("mouseout", function(d) {

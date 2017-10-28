@@ -42,15 +42,17 @@ body {
     font-weight: bold;
 }
 
-#filesTab {
+#statsTab {
     background-color: white;
     color: black;
     font-weight: normal;
 }
 
 #errorSect {
+    display: none;
     margin: 10px;
-    font-size: 0.9em;
+    padding: 10px;
+    font-size: 1em;
     background-color: maroon;
     color: white;
 }
@@ -104,8 +106,38 @@ svg {
     font-size: 2em;
 }
 
-#filesPage {
+#statsPage {
     display: none;
+    position: relative;
+    width: 100%;
+}
+
+#statsPathSect {
+    padding: 10px;
+}
+
+#statsPage .stats-hideable {
+    display: none;
+}
+
+table {
+    margin: 50px 10px 10px 10px;
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+thead {
+    font-weight: bold;
+    background-color: green;
+    color: white;
+}
+
+tbody {
+    background-color: white;
 }
 
 #footer {

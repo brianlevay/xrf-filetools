@@ -4,19 +4,19 @@
 
 let stdsTab = document.getElementById("stdsTab");
 let stdsPage = document.getElementById("stdsPage");
-let filesTab = document.getElementById("filesTab");
-let filesPage = document.getElementById("filesPage");
+let statsTab = document.getElementById("statsTab");
+let statsPage = document.getElementById("statsPage");
 
 stdsTab.onclick = function() {
     activateTab(stdsTab, stdsPage, true);
-    activateTab(filesTab, filesPage, false);
-    document.getElementById("errorSect").innerHTML = "";
+    activateTab(statsTab, statsPage, false);
+    clearError();
 };
 
-filesTab.onclick = function() {
+statsTab.onclick = function() {
     activateTab(stdsTab, stdsPage, false);
-    activateTab(filesTab, filesPage, true);
-    document.getElementById("errorSect").innerHTML = "";
+    activateTab(statsTab, statsPage, true);
+    clearError();
 };
 
 function activateTab(tabObj, pageObj, activate) {
@@ -33,13 +33,38 @@ function activateTab(tabObj, pageObj, activate) {
     }
 }
 
+let saveStats = document.getElementById("saveStats");
+saveStats.onchange = function() {
+    var hideable = document.getElementsByClassName("stats-hideable");
+    var n = hideable.length;
+    for (var i=0; i < n; i++) {
+        if (saveStats.checked) {
+            hideable[i].style.display = "block";
+        } else {
+            hideable[i].style.display = "none";
+        }
+    }
+};
+
+function clearError() {
+    let errorSect = document.getElementById("errorSect");
+    errorSect.innerHTML = "";
+    errorSect.style.display = "none";
+}
+
+function showError(errorStr) {
+    let errorSect = document.getElementById("errorSect");
+    errorSect.innerHTML = "ERROR: " + errorStr;
+    errorSect.style.display = "block";
+}
+
 //// Server Calls ////
 
-function updateStds() {
+function standardsAPI() {
     let stdsPath = document.getElementById("stdsPath").value;
     let postStr = encodeURI("stdsPath=" + stdsPath);
     if (stdsPath == "") {
-        document.getElementById("errorSect").innerHTML = ("ERROR: " + "No path provided for standards");
+        showError("No path provided for standards");
     } else {
         var xhttp;
         xhttp = new XMLHttpRequest();
@@ -57,76 +82,70 @@ function updateStds() {
 function handlePlotResponse(xhttp) {
     let response = JSON.parse(xhttp.response);
     if (response["Error"] != "none") {
-        document.getElementById("errorSect").innerHTML = ("ERROR: " + response["Error"]);
+        showError(response["Error"]);
     } else {
-        document.getElementById("errorSect").innerHTML = "";
+        clearError();
         updatePlot(response["Data"]);
     }
 }
 
-function uniqueNames() {
-    let srcPath = document.getElementById("srcPathNames").value;
-    let outPath = document.getElementById("outPathNames").value;
-    let outFile = document.getElementById("outFileNames").value;
-    let postStr = encodeURI("srcPath=" + srcPath + "&outPath=" + outPath + "&outName=" + outFile);
-    if ((srcPath == "") || (outPath == "")) {
-        document.getElementById("errorSect").innerHTML = ("ERROR: " + "Source and/or output path missing");
-    } else {
-        var xhttp;
-        xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                handleNamesResponse(this);
-            }
-        };
-        xhttp.open("POST", "/sample_stats", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send(postStr);
-    }
-}
-
-function handleNamesResponse(xhttp) {
-    let response = JSON.parse(xhttp.response);
-    if (response["Error"] != "none") {
-        document.getElementById("errorSect").innerHTML = ("ERROR: " + response["Error"]);
-    } else {
-        document.getElementById("errorSect").innerHTML = "";
-        alert("Finished!");
-    }
-}
-
-function sortFiles() {
-    let srcPath = document.getElementById("srcPathSort").value;
-    let outPath = document.getElementById("outPathSort").value;
-    let toRename = document.getElementById("renameCheckBox").checked;
-    let matchedFile = document.getElementById("matchedFileSort").value;
-    let postStr = encodeURI("srcPath=" + srcPath + "&outPath=" + outPath + "&toRename=" + toRename + "&matchedFile=" + matchedFile);
-    if ((srcPath == "") || (outPath == "")) {
-        document.getElementById("errorSect").innerHTML = ("ERROR: " + "Source and/or output path missing");
+function statsAPI() {
+    let srcPath = document.getElementById("srcPathStats").value;
+    let toSave = document.getElementById("saveStats").checked;
+    let outPath = document.getElementById("outPathStats").value;
+    let outFile = document.getElementById("outFileStats").value;
+    let postStr = encodeURI("srcPath=" + srcPath + "&toSave=" + toSave + "&outPath=" + outPath + "&outName=" + outFile);
+    if (srcPath == "") {
+        showError("Source and/or output path missing");
         return;
     }
-    if ((toRename == true) && (matchedFile == "")) {
-        document.getElementById("errorSect").innerHTML = ("ERROR: " + "No path provided for matched names file");
+    if ((toSave == true) && (outPath == "")) {
+        showError("Output path missing");
         return;
     }
     var xhttp;
     xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            handleSortResponse(this);
+            handleStatsResponse(this);
         }
     };
-    xhttp.open("POST", "/unique_names", true);
+    xhttp.open("POST", "/sample_stats", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(postStr);
 }
 
-function handleSortResponse(xhttp) {
+function handleStatsResponse(xhttp) {
     let response = JSON.parse(xhttp.response);
     if (response["Error"] != "none") {
-        document.getElementById("errorSect").innerHTML = ("ERROR: " + response["Error"]);
+        showError(response["Error"]);
     } else {
-        document.getElementById("errorSect").innerHTML = "";
-        alert("Finished!");
+        clearError();
+        let resultsSect = document.getElementById("statsResults");
+        resultsSect.innerHTML = "";
+        let stats = response["Stats"];
+        let headers = response["Headers"];
+        let rowN = stats.length;
+        let colN = headers.length;
+        
+        let table = document.createElement("table");
+        let tHeader = table.createTHead();
+        let tHeaderRow = tHeader.insertRow(0);
+        let tHeaderCell;
+        for (var j=0; j < colN; j++) {
+            tHeaderCell = tHeaderRow.insertCell(j);
+            tHeaderCell.innerHTML = headers[j];
+        }
+        let tBody = document.createElement("tbody");
+        table.appendChild(tBody);
+        let tRow, tCell;
+        for (var i=0; i < rowN; i++) {
+            tRow = tBody.insertRow(-1);
+            for (var j=0; j < colN; j++) {
+                tCell = tRow.insertCell(j);
+                tCell.innerHTML = stats[i][headers[j]];
+            }
+        }
+        resultsSect.appendChild(table);
     }
 }

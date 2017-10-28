@@ -69,9 +69,13 @@ func SortedSamples(m map[string]map[string]int) [][]string {
 		sortedArr = append(sortedArr, keyPts)
 	}
 	sort.Slice(sortedArr, func(i, j int) bool {
-		folderLess := sortedArr[i][0] < sortedArr[j][0]
-		nameLess := sortedArr[i][1] < sortedArr[j][1]
-		return folderLess && nameLess
+		if sortedArr[i][0] < sortedArr[j][0] {
+			return true
+		}
+		if sortedArr[i][0] > sortedArr[j][0] {
+			return false
+		}
+		return sortedArr[i][1] < sortedArr[j][1]
 	})
 	return sortedArr
 }
