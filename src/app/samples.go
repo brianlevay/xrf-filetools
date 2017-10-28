@@ -1,6 +1,7 @@
 package main
 
 import (
+	//"encoding/json"
 	"log"
 	"net/http"
 	stats "sampleStats"
@@ -44,6 +45,7 @@ func setSampleStatsHandler() {
 		samples := new(stats.SampleStats)
 		samples.Initialize(sourcePath)
 		samples.RecursiveSearch()
+
 		errW := samples.WriteToCSV(outPath, outName)
 		if errW != nil {
 			log.Println(errW)

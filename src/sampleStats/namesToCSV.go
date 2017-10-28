@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"strconv"
 )
 
 // Highest level function //
@@ -17,32 +16,25 @@ func (samples *SampleStats) WriteToCSV(outPath string, outName string) error {
 	}
 	defer f.Close()
 
-	conditions := samples.SortedConditions()
-	_, errW := f.WriteString("FolderName,FileName," + strings.Join(conditions, ",") + "\n")
+	_, errW := f.WriteString(strings.Join(samples.Headers, ",") + "\n")
 	if errW != nil {
 		log.Println(errW)
 		return errW
 	}
-	for key, m := range samples.DataMap {
-		keyPts := strings.Split(key, "/")
-		condStr := keyValsToString(m, conditions)
-		_, errW = f.WriteString(keyPts[0] + "," + keyPts[1] + "," + condStr + "\n")
-		if errW != nil {
-			log.Println(errW)
-			return errW
+	for _, m := range samples.Stats {
+		for j, key := range samples.Headers {
+			_, errW = f.WriteString(m[key])
+			if errW != nil {
+				log.Println(errW)
+				return errW
+			}
+			if j < (len(samples.Headers) - 1) {
+				f.WriteString(",")
+			}
 		}
+		f.WriteString("\n")
 	}
 	f.Sync()
 
 	return nil
-}
-
-func keyValsToString(m map[string]int, orderArray []string) string {
-	var valArr []string
-	var valStr string
-	for _, item := range orderArray {
-		valArr = append(valArr, strconv.Itoa(m[item]))
-	}
-	valStr = strings.Join(valArr, ",")
-	return valStr
 }

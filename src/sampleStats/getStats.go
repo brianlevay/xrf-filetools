@@ -13,6 +13,7 @@ func (samples *SampleStats) RecursiveSearch() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	samples.GenerateStatsArr()
 }
 
 // Called on each file during recursiveSearch, uses closure to bind pointer to struct //

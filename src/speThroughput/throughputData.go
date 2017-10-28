@@ -26,6 +26,15 @@ type Row struct {
 	CC   string `json:"CC"`
 }
 
+func (through *Throughput) Initialize(sourcePath string) {
+	defaultTime := time.Date(2000, time.January, 01, 01, 0, 0, 0, time.UTC)
+	through.LastDate = defaultTime
+	through.NextDate = defaultTime
+	through.SourcePath = sourcePath
+	through.Error = "none"
+	through.Data = nil
+}
+
 func (through *Throughput) JSON() []byte {
 	var JSONbytes []byte
 	var err error
@@ -34,13 +43,4 @@ func (through *Throughput) JSON() []byte {
 		return []byte("{\"Error\":\"Unable to marshal JSON\"}")
 	}
 	return JSONbytes
-}
-
-func (through *Throughput) Initialize(sourcePath string) {
-	defaultTime := time.Date(2000, time.January, 01, 01, 0, 0, 0, time.UTC)
-	through.LastDate = defaultTime
-	through.NextDate = defaultTime
-	through.SourcePath = sourcePath
-	through.Error = "none"
-	through.Data = nil
 }
