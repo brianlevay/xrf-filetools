@@ -4,16 +4,16 @@ import (
 	"log"
 	"net/http"
 	"os"
-	stds "speSummaries"
+	stds "speThroughput"
 )
 
 func main() {
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/", fs)
 
-	summ := new(stds.Summary)
-	summ.Initialize("")
-	setStandardsHandler(summ)
+	through := new(stds.Throughput)
+	through.Initialize("")
+	setStandardsHandler(through)
 
 	setUniqueHandler()
 

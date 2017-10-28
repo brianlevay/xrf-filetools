@@ -3,14 +3,14 @@ package main
 import (
 	"log"
 	"net/http"
-	stds "speSummaries"
+	stds "speThroughput"
 	"strings"
 )
 
-func setStandardsHandler(summ *stds.Summary) {
+func setStandardsHandler(through *stds.Throughput) {
 	http.HandleFunc("/update_stds", func(w http.ResponseWriter, r *http.Request) {
-		summ.Mtx.Lock()
-		defer summ.Mtx.Unlock()
+		through.Mtx.Lock()
+		defer through.Mtx.Unlock()
 		err := r.ParseForm()
 		if err != nil {
 			log.Println(err)
@@ -30,10 +30,10 @@ func setStandardsHandler(summ *stds.Summary) {
 			w.Write([]byte("{\"Error\":\"Invalid directory\"}"))
 			return
 		}
-		if strings.Compare(sourcePath, summ.SourcePath) != 0 {
-			summ.Initialize(sourcePath)
+		if strings.Compare(sourcePath, through.SourcePath) != 0 {
+			through.Initialize(sourcePath)
 		}
-		summ.RecursiveSearch()
-		w.Write(summ.JSON())
+		through.RecursiveSearch()
+		w.Write(through.JSON())
 	})
 }
