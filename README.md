@@ -1,3 +1,3 @@
 ## XRF File Tools
 
-This is a project for integrating a number of file manipulation and plotting tools used in the XRF lab.
+This is a project for integrating a number of file manipulation and plotting tools used in the XRF lab. The server runs locally so it has access to the file system. To use this, download the binary or download the source and compile it for your target. You'll need to download the assets in "static", and you can either include your own copy of D3 or you can modify the html script tag to fetch it from the web. Access the program via localhost:8080.

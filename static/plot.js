@@ -155,12 +155,10 @@ function updatePlot(rawData) {
     yScale.domain([0, (d3.max(filteredData, yValue)*1.1)]);
     
     let plotSect = document.getElementById("plotSect");
-    let plotRect = plotSect.getBoundingClientRect();
     
-    var pts = svg.selectAll(".point")
-        .data(filteredData);
+    var pts = svg.selectAll(".point").remove();
+    pts = svg.selectAll(".point").data(filteredData);
     
-    pts.exit().remove();
     pts.enter().append("circle")
         .attr("class", "point")
         .attr("r", 5)
@@ -169,8 +167,8 @@ function updatePlot(rawData) {
         .style("fill", function(d) { return color(d["X"]); })
         .on("mouseover", function(d) {
             tooltip.html(tooltipHTML(d))
-                .style("left", (d3.event.pageX - plotRect.x + 5) + "px")
-                .style("top", (d3.event.pageY - plotRect.y + margin["top"]) + "px")
+                .style("left", (d3.event.pageX + 5) + "px")
+                .style("top", (d3.event.pageY - Math.round(plotSect.offsetTop)) + "px")
                 .style("opacity", 0.9);
         })
         .on("mouseout", function(d) {
