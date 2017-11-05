@@ -155,9 +155,6 @@ tbody {
 }
 
 canvas {
-    border: 1px solid black;
-}
-
-#canvasArea {
-    border: 1px solid green;
+    display: none;
+    margin: 50px 10px 10px 10px;
 }
