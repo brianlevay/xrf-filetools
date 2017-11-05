@@ -16,6 +16,8 @@ func main() {
 
 	setSampleStatsHandler()
 
-	log.Println("Listening at http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	port := ":8080"
+	htmlPath := "http://localhost" + port
+	log.Println("Listening at " + htmlPath)
+	http.ListenAndServe(port, nil)
 }

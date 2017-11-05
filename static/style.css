@@ -48,6 +48,12 @@ body {
     font-weight: normal;
 }
 
+#imgTab {
+    background-color: white;
+    color: black;
+    font-weight: normal;
+}
+
 #errorSect {
     display: none;
     margin: 10px;
@@ -57,13 +63,12 @@ body {
     color: white;
 }
 
-#stdsPage {
-    display: block;
+.page {
     position: relative;
     width: 100%;
 }
 
-#stdsPathSect {
+.pathSect {
     padding: 10px;
 }
 
@@ -106,20 +111,6 @@ svg {
     font-size: 2em;
 }
 
-#statsPage {
-    display: none;
-    position: relative;
-    width: 100%;
-}
-
-#statsPathSect {
-    padding: 10px;
-}
-
-#statsPage .stats-hideable {
-    display: none;
-}
-
 table {
     margin: 50px 10px 10px 10px;
     border-collapse: collapse;
@@ -140,9 +131,33 @@ tbody {
     background-color: white;
 }
 
+#stdsPage {
+    display: block;
+}
+
+#statsPage {
+    display: none;
+}
+
+#statsPage .stats-hideable {
+    display: none;
+}
+
+#imgPage {
+    display: none;
+}
+
 #footer {
     text-align: center;
     background-color: black;
     color: white;
     font-size: 0.8em;
+}
+
+canvas {
+    border: 1px solid black;
+}
+
+#canvasArea {
+    border: 1px solid green;
 }

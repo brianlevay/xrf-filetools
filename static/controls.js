@@ -6,16 +6,27 @@ let stdsTab = document.getElementById("stdsTab");
 let stdsPage = document.getElementById("stdsPage");
 let statsTab = document.getElementById("statsTab");
 let statsPage = document.getElementById("statsPage");
+let imgTab = document.getElementById("imgTab");
+let imgPage = document.getElementById("imgPage");
 
 stdsTab.onclick = function() {
     activateTab(stdsTab, stdsPage, true);
     activateTab(statsTab, statsPage, false);
+    activateTab(imgTab, imgPage, false);
     clearError();
 };
 
 statsTab.onclick = function() {
     activateTab(stdsTab, stdsPage, false);
     activateTab(statsTab, statsPage, true);
+    activateTab(imgTab, imgPage, false);
+    clearError();
+};
+
+imgTab.onclick = function() {
+    activateTab(stdsTab, stdsPage, false);
+    activateTab(statsTab, statsPage, false);
+    activateTab(imgTab, imgPage, true);
     clearError();
 };
 
@@ -59,6 +70,7 @@ function showError(errorStr) {
 }
 
 //// Server Calls ////
+//// For standards plotting ////
 
 function standardsAPI() {
     let stdsPath = document.getElementById("stdsPath").value;
@@ -88,6 +100,8 @@ function handlePlotResponse(xhttp) {
         updatePlot(response["Data"]);
     }
 }
+
+//// For sample stats ////
 
 function statsAPI() {
     let srcPath = document.getElementById("srcPathStats").value;
@@ -149,3 +163,6 @@ function handleStatsResponse(xhttp) {
         resultsSect.appendChild(table);
     }
 }
+
+//// For image plotting ////
+
