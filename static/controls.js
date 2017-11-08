@@ -166,3 +166,31 @@ function handleStatsResponse(xhttp) {
 
 //// For image plotting ////
 
+function pointsAPI() {
+    let srcPath = document.getElementById("srcPathImg").value;
+    let postStr = encodeURI("srcPath=" + srcPath);
+    if (srcPath == "") {
+        showError("Source and/or output path missing");
+        return;
+    }
+    var xhttp;
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            handleSectionPtsResponse(this);
+        }
+    };
+    xhttp.open("POST", "/section_points", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(postStr);
+}
+
+function handleSectionPtsResponse(xhttp) {
+    let response = JSON.parse(xhttp.response);
+    if (response["Error"] != "none") {
+        showError(response["Error"]);
+    } else {
+        clearError();
+        
+    }
+}

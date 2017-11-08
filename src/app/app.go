@@ -16,6 +16,8 @@ func main() {
 
 	setSampleStatsHandler()
 
+	setSectionPointsHandler()
+
 	port := ":8080"
 	htmlPath := "http://localhost" + port
 	log.Println("Listening at " + htmlPath)
