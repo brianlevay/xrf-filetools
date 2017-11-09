@@ -3,15 +3,13 @@ package sectionPoints
 import (
 	"encoding/json"
 	"sort"
-	"strconv"
 )
 
 type Point struct {
-	Sample string
-	X      string
-	Y      string
-	DC     string
-	CC     string
+	X  float64
+	Y  float64
+	DC float64
+	CC float64
 }
 
 type UniquePoints struct {
@@ -27,7 +25,7 @@ func (points *UniquePoints) Initialize(sourcePath string) {
 	points.Error = "none"
 	points.DataMap = make(map[Point]int)
 	points.Points = nil
-	points.Headers = []string{"Sample", "X", "Y", "DC", "CC"}
+	points.Headers = []string{"X", "Y", "DC", "CC"}
 }
 
 func (points *UniquePoints) FlattenToArr() {
@@ -51,17 +49,13 @@ func SortedPtsXY(m map[Point]int) []Point {
 		sortedPts = append(sortedPts, key)
 	}
 	sort.Slice(sortedPts, func(i, j int) bool {
-		Xi, _ := strconv.Atoi(sortedPts[i].X)
-		Xj, _ := strconv.Atoi(sortedPts[j].X)
-		Yi, _ := strconv.Atoi(sortedPts[i].Y)
-		Yj, _ := strconv.Atoi(sortedPts[j].Y)
-		if Xi < Xj {
+		if sortedPts[i].X < sortedPts[j].X {
 			return true
 		}
-		if Xi > Xj {
+		if sortedPts[i].X > sortedPts[j].X {
 			return false
 		}
-		return Yi < Yj
+		return sortedPts[i].Y < sortedPts[j].Y
 	})
 	return sortedPts
 }

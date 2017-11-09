@@ -76,16 +76,6 @@
                         <span>Path to SPE Files for an Individual Section:</span><br>
                         <input id="srcPathImg" type="text" name="srcPathImg">
                     </div>
-                    <div class="buttonDiv">
-                        <button id="getPoints" type="button" onclick="pointsAPI()" disabled="true">Get Points</button>
-                    </div>
-                </section>
-                <section id="pointResults"></section>
-                <section id="imgDesignSect"  class="pathSect">
-                    <div class="inputDesc">
-                        <h3>Plot Your XRF Points on the Section Image</h3>
-                        <p>Coming soon!</p>
-                    </div>
                     <div class="inputDiv">
                         <span>Select the Section Image:</span><br>
                         <br>
@@ -97,7 +87,9 @@
 	    	            <button id="largerImg" onclick="updateImage('larger')" disabled="true">Larger</button>
 	    	            <button id="smallerImg" onclick="updateImage('smaller')" disabled="true">Smaller</button>
 	                </div>
-                    
+                    <div class="buttonDiv">
+                        <button id="plotPoints" type="button" onclick="pointsAPI()" disabled="true">Plot Points</button>
+                    </div>
                 </section>
                 <section id="imgResults">
                     <canvas id="img_canvas"></canvas>

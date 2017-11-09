@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -33,51 +34,65 @@ func addSample(points *UniquePoints) filepath.WalkFunc {
 // Called on each file inside WalkFunc closure //
 func getPoint(fileName string, path string, points *UniquePoints) {
 	var point Point
+	var err error
 	if strings.Contains(fileName, "!") == true {
-		point = pointFromNew(fileName, path)
+		point, err = pointFromNew(fileName, path)
 	} else {
-		point = pointFromOld(fileName, path)
+		point, err = pointFromOld(fileName, path)
+	}
+	if err != nil {
+		return
 	}
 	points.DataMap[point]++
 }
 
-func pointFromNew(fileName string, path string) Point {
+func pointFromNew(fileName string, path string) (Point, error) {
+	var errs [4]error
 	cleanName := strings.Replace(fileName, ",", ".", -1)
 	filePts := strings.Split(cleanName, "!")
 
 	point := new(Point)
-	point.Sample = filePts[0]
-	point.X = filePts[9]
-	point.Y = filePts[10]
-	point.DC = filePts[12]
-	point.CC = filePts[13]
-	return *point
+	point.X, errs[0] = strconv.ParseFloat(filePts[9], 64)
+	point.Y, errs[1] = strconv.ParseFloat(filePts[10], 64)
+	point.DC, errs[2] = strconv.ParseFloat(filePts[12], 64)
+	point.CC, errs[3] = strconv.ParseFloat(filePts[13], 64)
+	for i := 0; i < 4; i++ {
+		if errs[i] != nil {
+			return *point, errs[i]
+		}
+	}
+	return *point, nil
 }
 
-func pointFromOld(fileName string, path string) Point {
+func pointFromOld(fileName string, path string) (Point, error) {
+	var errs [4]error
 	var xFound bool
 	cleanName := strings.Replace(fileName, ",", ".", -1)
 	filePts := strings.Split(cleanName, " ")
 	nPts := len(filePts)
 
 	point := new(Point)
-	point.Sample = filePts[0]
-	point.DC = "10.0"
-	point.CC = "12.0"
+	point.DC = 10
+	point.CC = 12
 	for i := 1; i < nPts; i++ {
 		if strings.Contains(filePts[i], "mm") == true {
 			rootStr := strings.Replace(filePts[i], "mm", "", -1)
 			if strings.Contains(rootStr, "DC") == true {
-				point.DC = strings.Replace(rootStr, "DC", "", -1)
+				point.DC, errs[0] = strconv.ParseFloat(strings.Replace(rootStr, "DC", "", -1), 64)
 			} else if strings.Contains(rootStr, "CC") == true {
-				point.CC = strings.Replace(rootStr, "CC", "", -1)
+				point.CC, errs[1] = strconv.ParseFloat(strings.Replace(rootStr, "CC", "", -1), 64)
 			} else if xFound == true {
-				point.Y = rootStr
+				point.Y, errs[2] = strconv.ParseFloat(rootStr, 64)
 			} else {
-				point.X = rootStr
+				point.X, errs[3] = strconv.ParseFloat(rootStr, 64)
 				xFound = true
 			}
 		}
 	}
-	return *point
+	for i := 0; i < 4; i++ {
+		if errs[i] != nil {
+			return *point, errs[i]
+		}
+	}
+	return *point, nil
 }
