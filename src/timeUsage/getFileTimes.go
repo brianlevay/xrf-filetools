@@ -33,16 +33,24 @@ func readFileContents(timeuse *TimeStats) filepath.WalkFunc {
 				return nil
 			}
 			fileString := string(fileBytes)
-			getContents(fileString, timeuse)
+			getContents(info.Name(), fileString, timeuse)
 		}
 		return nil
 	}
 }
 
 // Called on each file inside WalkFunc closure //
-func getContents(fileContents string, timeuse *TimeStats) {
-	var Seconds, Timestamp string
+func getContents(fileName string, fileContents string, timeuse *TimeStats) {
+	var Name, Seconds, Timestamp string
 	var nextRow string
+
+	var namePts []string
+	if strings.Contains(fileName, "!") {
+		namePts = strings.Split(fileName, "!")
+	} else {
+		namePts = strings.Split(fileName, " ")
+	}
+	Name = namePts[0]
 
 	fileRows := strings.Split(fileContents, "\n")
 	nRows := len(fileRows)
@@ -57,11 +65,11 @@ func getContents(fileContents string, timeuse *TimeStats) {
 			break
 		}
 	}
-	updateData(Seconds, Timestamp, timeuse)
+	updateData(Name, Seconds, Timestamp, timeuse)
 }
 
 // Performs the necessary date conversions and updates the data structure //
-func updateData(Seconds string, Timestamp string, timeuse *TimeStats) {
+func updateData(Name string, Seconds string, Timestamp string, timeuse *TimeStats) {
 	secondsPts := strings.Split(Seconds, " ")
 	actualSec, err1 := strconv.ParseInt(secondsPts[len(secondsPts)-1], 10, 64)
 	if err1 != nil {
@@ -86,6 +94,8 @@ func updateData(Seconds string, Timestamp string, timeuse *TimeStats) {
 		daySummary.Finish = timeObj
 		daySummary.Seconds = actualSec
 		daySummary.Points = 1
+		daySummary.Sections = make(map[string]bool)
+		daySummary.Sections[Name] = true
 		timeuse.DataMap[dayMeas] = daySummary
 	} else {
 		if timeObj.Before(daySummary.Start) {
@@ -96,6 +106,7 @@ func updateData(Seconds string, Timestamp string, timeuse *TimeStats) {
 		}
 		daySummary.Seconds += actualSec
 		daySummary.Points += 1
+		daySummary.Sections[Name] = true
 		timeuse.DataMap[dayMeas] = daySummary
 	}
 }

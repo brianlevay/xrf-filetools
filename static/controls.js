@@ -194,7 +194,7 @@ function handleTimeUsageResponse(xhttp) {
         let resultsSect = document.getElementById("timesResults");
         resultsSect.innerHTML = "";
         let stats = response["Stats"];
-        let headers = ["Day","Start","Finish","Elapsed","Runtime","Points"];
+        let headers = response["Headers"];
         let rowN = stats.length;
         let colN = headers.length;
         

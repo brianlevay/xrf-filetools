@@ -11,29 +11,33 @@ type TimeStats struct {
 	SourcePath string                `json:"-"`
 	Error      string                `json:"Error"`
 	DataMap    map[string]DaySummary `json:"-"`
+	Headers    []string              `json:"Headers"`
 	Stats      []DayDisplay          `json:"Stats"`
 }
 
 type DaySummary struct {
-	Start   time.Time `json:"-"`
-	Finish  time.Time `json:"-"`
-	Seconds int64     `json:"-"`
-	Points  int64     `json:"-"`
+	Start    time.Time       `json:"-"`
+	Finish   time.Time       `json:"-"`
+	Seconds  int64           `json:"-"`
+	Points   int64           `json:"-"`
+	Sections map[string]bool `json:"-"`
 }
 
 type DayDisplay struct {
-	Day     string `json:"Day"`
-	Start   string `json:"Start"`
-	Finish  string `json:"Finish"`
-	Elapsed string `json:"Elapsed"`
-	Runtime string `json:"Runtime"`
-	Points  string `json:"Points"`
+	Day      string `json:"Day"`
+	Start    string `json:"Start"`
+	Finish   string `json:"Finish"`
+	Elapsed  string `json:"Elapsed"`
+	Runtime  string `json:"Runtime"`
+	Points   string `json:"Points"`
+	Sections string `json:"Sections"`
 }
 
 func (timeuse *TimeStats) Initialize(sourcePath string) {
 	timeuse.SourcePath = sourcePath
 	timeuse.Error = "none"
 	timeuse.DataMap = make(map[string]DaySummary)
+	timeuse.Headers = []string{"Day", "Start", "Finish", "Elapsed", "Runtime", "Sections", "Points"}
 }
 
 func (timeuse *TimeStats) FlattenToArr() {
@@ -86,6 +90,7 @@ func SortedDays(m map[string]DaySummary) []DayDisplay {
 		dayDisplay.Elapsed = elapsedHrs
 		dayDisplay.Runtime = runHrs
 		dayDisplay.Points = strconv.FormatInt(sortedRaw[i].Points, 10)
+		dayDisplay.Sections = strconv.Itoa(len(sortedRaw[i].Sections))
 
 		sortedDays = append(sortedDays, dayDisplay)
 	}
