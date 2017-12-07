@@ -13,7 +13,7 @@
         <section id="navBar" class="bodyPt">
             <div id="stdsTab" class="navTab">Standards Plot</div>
             <div id="statsTab" class="navTab">Sample Stats</div>
-            <div id="imgTab" class="navTab">Points on Image</div>
+            <div id="timesTab" class="navTab">Time Usage</div>
         </section>
         <section id="content" class="bodyPt">
             <section id="errorSect"></section>
@@ -66,34 +66,22 @@
                 </section>
                 <section id="statsResults"></section>
             </section>
-            <section id="imgPage" class="page">
-                <section id="imgPathSect"  class="pathSect">
+            <section id="timesPage" class="page">
+                <section id="timesPathSect" class="pathSect">
                     <div class="inputDesc">
-                        <h3>Get Unique XRF Points for a Section</h3>
-                        <p>Coming soon!</p>
+                        <h3>Generate a Report of Time Usage from SPE Files</h3>
+                        <p>See a list of start and finish times per day, along with total elapsed time (hrs) and actual 
+                        analysis time (hrs).</p>
                     </div>
                     <div class="inputDiv">
-                        <span>Path to SPE Files for an Individual Section:</span><br>
-                        <input id="srcPathImg" type="text" name="srcPathImg">
+                        <span>Path to Original SPE Files:</span><br>
+                        <input id="srcPathTimes" type="text" name="srcPathTimes">
                     </div>
-                    <div class="inputDiv">
-                        <span>Select the Section Image:</span><br>
-                        <br>
-                        <input id="srcFileImg" type="file" name="srcFileImg" onchange="handleFile(this.files)">
-                        <br><br>
-                    </div>
-                    <div class="inputDiv">
-	    	            <span>Change image size or orientation:</span><br>
-	    	            <button id="largerImg" onclick="updateImage('larger')" disabled="true">Larger</button>
-	    	            <button id="smallerImg" onclick="updateImage('smaller')" disabled="true">Smaller</button>
-	                </div>
                     <div class="buttonDiv">
-                        <button id="plotPoints" type="button" onclick="pointsAPI()" disabled="true">Plot Points</button>
+                        <button id="getTimes" type="button" onclick="timesAPI()">Get Times</button>
                     </div>
                 </section>
-                <section id="imgResults">
-                    <canvas id="img_canvas"></canvas>
-                </section>
+                <section id="timesResults"></section>
             </section>
         </section>
         <section id="footer" class="bodyPt">
@@ -103,6 +91,5 @@
         <script src="controls.js"></script>
         <script src="d3.min.js"></script>
         <script src="standards.js"></script>
-        <script src="core_img.js"></script>
     </body>
 </html>

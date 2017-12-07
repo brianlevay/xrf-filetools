@@ -48,7 +48,7 @@ body {
     font-weight: normal;
 }
 
-#imgTab {
+#timesTab {
     background-color: white;
     color: black;
     font-weight: normal;
@@ -143,7 +143,7 @@ tbody {
     display: none;
 }
 
-#imgPage {
+#timesPage {
     display: none;
 }
 
@@ -152,9 +152,4 @@ tbody {
     background-color: black;
     color: white;
     font-size: 0.8em;
-}
-
-canvas {
-    display: none;
-    margin: 50px 10px 10px 10px;
 }

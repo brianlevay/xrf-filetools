@@ -6,27 +6,27 @@ let stdsTab = document.getElementById("stdsTab");
 let stdsPage = document.getElementById("stdsPage");
 let statsTab = document.getElementById("statsTab");
 let statsPage = document.getElementById("statsPage");
-let imgTab = document.getElementById("imgTab");
-let imgPage = document.getElementById("imgPage");
+let timesTab = document.getElementById("timesTab");
+let timesPage = document.getElementById("timesPage");
 
 stdsTab.onclick = function() {
     activateTab(stdsTab, stdsPage, true);
     activateTab(statsTab, statsPage, false);
-    activateTab(imgTab, imgPage, false);
+    activateTab(timesTab, timesPage, false);
     clearError();
 };
 
 statsTab.onclick = function() {
     activateTab(stdsTab, stdsPage, false);
     activateTab(statsTab, statsPage, true);
-    activateTab(imgTab, imgPage, false);
+    activateTab(timesTab, timesPage, false);
     clearError();
 };
 
-imgTab.onclick = function() {
+timesTab.onclick = function() {
     activateTab(stdsTab, stdsPage, false);
     activateTab(statsTab, statsPage, false);
-    activateTab(imgTab, imgPage, true);
+    activateTab(timesTab, timesPage, true);
     clearError();
 };
 
@@ -164,33 +164,58 @@ function handleStatsResponse(xhttp) {
     }
 }
 
-//// For image plotting ////
+//// For time usage reporting ////
 
-function pointsAPI() {
-    let srcPath = document.getElementById("srcPathImg").value;
+function timesAPI() {
+    let srcPath = document.getElementById("srcPathTimes").value;
     let postStr = encodeURI("srcPath=" + srcPath);
     if (srcPath == "") {
-        showError("Source and/or output path missing");
+        showError("Source path missing");
         return;
     }
     var xhttp;
     xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            handleSectionPtsResponse(this);
+            handleTimeUsageResponse(this);
         }
     };
-    xhttp.open("POST", "/section_points", true);
+    xhttp.open("POST", "/time_usage", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(postStr);
 }
 
-function handleSectionPtsResponse(xhttp) {
+function handleTimeUsageResponse(xhttp) {
     let response = JSON.parse(xhttp.response);
     if (response["Error"] != "none") {
         showError(response["Error"]);
     } else {
         clearError();
+        let resultsSect = document.getElementById("timesResults");
+        resultsSect.innerHTML = "";
+        let stats = response["Stats"];
+        let headers = ["Day","Start","Finish","Elapsed","Runtime","Points"];
+        let rowN = stats.length;
+        let colN = headers.length;
         
+        let table = document.createElement("table");
+        let tHeader = table.createTHead();
+        let tHeaderRow = tHeader.insertRow(0);
+        let tHeaderCell;
+        for (var j=0; j < colN; j++) {
+            tHeaderCell = tHeaderRow.insertCell(j);
+            tHeaderCell.innerHTML = headers[j];
+        }
+        let tBody = document.createElement("tbody");
+        table.appendChild(tBody);
+        let tRow, tCell;
+        for (var i=0; i < rowN; i++) {
+            tRow = tBody.insertRow(-1);
+            for (var j=0; j < colN; j++) {
+                tCell = tRow.insertCell(j);
+                tCell.innerHTML = stats[i][headers[j]];
+            }
+        }
+        resultsSect.appendChild(table);
     }
 }
