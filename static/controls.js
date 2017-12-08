@@ -69,6 +69,15 @@ function showError(errorStr) {
     errorSect.style.display = "block";
 }
 
+function disableBtn(buttonName, toDisable) {
+    let btn = document.getElementById(buttonName);
+    if (toDisable == true) {
+        btn.disabled = true;
+    } else {
+        btn.disabled = false;
+    }
+}
+
 //// Server Calls ////
 //// For standards plotting ////
 
@@ -77,18 +86,19 @@ function standardsAPI() {
     let postStr = encodeURI("stdsPath=" + stdsPath);
     if (stdsPath == "") {
         showError("No path provided for standards");
-    } else {
-        var xhttp;
-        xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                handlePlotResponse(this);
-            }
-        };
-        xhttp.open("POST", "/update_stds", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send(postStr);
+        return;
     }
+    var xhttp;
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            handlePlotResponse(this);
+        }
+    };
+    xhttp.open("POST", "/update_stds", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(postStr);
+    disableBtn("updateStds", true);
 }
 
 function handlePlotResponse(xhttp) {
@@ -99,6 +109,7 @@ function handlePlotResponse(xhttp) {
         clearError();
         updatePlot(response["Data"]);
     }
+    disableBtn("updateStds", false);
 }
 
 //// For sample stats ////
@@ -127,6 +138,7 @@ function statsAPI() {
     xhttp.open("POST", "/sample_stats", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(postStr);
+    disableBtn("getStats", true);
 }
 
 function handleStatsResponse(xhttp) {
@@ -162,6 +174,7 @@ function handleStatsResponse(xhttp) {
         }
         resultsSect.appendChild(table);
     }
+    disableBtn("getStats", false);
 }
 
 //// For time usage reporting ////
@@ -183,6 +196,7 @@ function timesAPI() {
     xhttp.open("POST", "/time_usage", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(postStr);
+    disableBtn("getTimes", true);
 }
 
 function handleTimeUsageResponse(xhttp) {
@@ -218,4 +232,5 @@ function handleTimeUsageResponse(xhttp) {
         }
         resultsSect.appendChild(table);
     }
+    disableBtn("getTimes", false);
 }
