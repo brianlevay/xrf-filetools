@@ -1,10 +1,10 @@
-package fileInfo
+package avaatechSpe
 
 import (
 	"time"
 )
 
-type FileContents struct {
+type SPE struct {
 	Path    string
 	Name    string
 	Date    string

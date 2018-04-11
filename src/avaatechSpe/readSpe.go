@@ -1,4 +1,4 @@
-package fileInfo
+package avaatechSpe
 
 import (
 	"io/ioutil"
@@ -8,25 +8,25 @@ import (
 	"strconv"
 )
 
-func ReadContents(path string, info os.FileInfo) *FileContents {
+func ReadContents(path string, info os.FileInfo) *SPE {
 	fileBytes, errRead := ioutil.ReadFile(path)
 	if errRead != nil {
 		log.Print(errRead)
 		return nil
 	}
 	fileString := string(fileBytes)
-	contents := new(FileContents)
-	contents.Path = path
-	parseFile(info.Name(), fileString, contents)
-	return contents
+	spe := new(SPE)
+	spe.Path = path
+	parseFile(info.Name(), fileString, spe)
+	return spe
 }
 
-func parseFile(fileName string, fileContents string, contents *FileContents) {
+func parseFile(fileName string, fileContents string, spe *SPE) {
 	var cps, voltage, current, dc, cc, nextRow string
 	var measureTimes []string
 	var convErr error
-	contents.Name = getName(fileName)
-	contents.Filter = getFilter(fileName)
+	spe.Name = getName(fileName)
+	spe.Filter = getFilter(fileName)
 	fileRows := strings.Split(fileContents, "\n")
 	nRows := len(fileRows)
 	for i := 0; i < nRows-1; i++ {
@@ -34,26 +34,26 @@ func parseFile(fileName string, fileContents string, contents *FileContents) {
 		nextRow = strings.Replace(nextRow, ",", ".", -1)
 		nextRow = strings.Trim(nextRow)
 		if strings.Contains(fileRows[i], "$X_Position:") == true {
-			contents.X, convErr = strconv.ParseFloat(nextRow,64)
+			spe.X, convErr = strconv.ParseFloat(nextRow,64)
 		} else if strings.Contains(fileRows[i], "$Y_Position:") == true {
-			contents.Y, convErr = strconv.ParseFloat(nextRow,64)
+			spe.Y, convErr = strconv.ParseFloat(nextRow,64)
 		} else if strings.Contains(fileRows[i], "$Slit_DC:") == true {
-			contents.DC, convErr = strconv.ParseFloat(nextRow,64)
+			spe.DC, convErr = strconv.ParseFloat(nextRow,64)
 		} else if strings.Contains(fileRows[i], "$Slit_CC:") == true {
-			contents.CC, convErr = strconv.ParseFloat(nextRow,64)
+			spe.CC, convErr = strconv.ParseFloat(nextRow,64)
 		} else if strings.Contains(fileRows[i], "$TotalCPS:") == true {
-			contents.CPS, convErr = strconv.ParseUint(nextRow,10,64)
+			spe.CPS, convErr = strconv.ParseUint(nextRow,10,64)
 		} else if strings.Contains(fileRows[i], "$ACC_VOLT:") == true {
-			contents.Voltage, convErr = strconv.ParseFloat(nextRow,64)
+			spe.Voltage, convErr = strconv.ParseFloat(nextRow,64)
 		} else if strings.Contains(fileRows[i], "$TUBE_CUR:") == true {
-			contents.Current, convErr = strconv.ParseFloat(nextRow,64)
+			spe.Current, convErr = strconv.ParseFloat(nextRow,64)
 		} else if strings.Contains(fileRows[i], "$MEAS_TIM:") == true {
 			measureTimes = strings.Split(nextRow, " ")
-			contents.Live, convErr = strconv.ParseUint(measureTimes[0],64)
+			spe.Live, convErr = strconv.ParseUint(measureTimes[0],64)
 		} else if strings.Contains(fileRows[i], "$DATE_MEA:") == true {
-			contents.Date = nextRow
+			spe.Date = nextRow
 		} else if strings.Contains(fileRows[i], "$DATA:") == true {
-			contents.Counts = getChannelCounts(fileRows, (i+2))
+			spe.Counts = getChannelCounts(fileRows, (i+2))
 		}
 	}
 
@@ -76,6 +76,6 @@ func getFilter(fileName string) string {
 	return "n/a"
 }
 
-func getChannelCounts(fileRows []string, start int) {
+func getChannelCounts(fileRows []string, start int) []uint64 {
 	
 }
