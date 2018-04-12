@@ -1,12 +1,11 @@
 package avaatechSpe
 
-import (
-	"time"
-)
+import ()
 
 type SPE struct {
 	Path    string
 	Name    string
+	Folder  string
 	Date    string
 	Voltage float64
 	Filter  string
