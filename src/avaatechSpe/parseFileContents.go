@@ -10,19 +10,19 @@ import (
 const defaultChannelN int = 2048
 
 func (spe *SPE) ParseFileContents() error {
-	var cps, voltage, current, dc, cc, nextRow string
+	var nextRow string
 	var measureTimes []string
-	fileBytes, errRead := ioutil.ReadFile(spe.Path)
+	fileBytes, errRead := ioutil.ReadFile(spe.FilePath)
 	if errRead != nil {
 		return errRead
 	}
 	fileString := string(fileBytes)
-	fileRows := strings.Split(fileContents, "\n")
+	fileRows := strings.Split(fileString, "\n")
 	nRows := len(fileRows)
 	for i := 0; i < nRows-1; i++ {
 		nextRow = strings.Replace(fileRows[i+1], "\r", "", -1)
 		nextRow = strings.Replace(nextRow, ",", ".", -1)
-		nextRow = strings.Trim(nextRow)
+		nextRow = strings.Trim(nextRow, " ")
 		if strings.Contains(fileRows[i], "$X_Position:") == true {
 			spe.X, _ = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$Y_Position:") == true {
@@ -50,11 +50,14 @@ func (spe *SPE) ParseFileContents() error {
 }
 
 func convertContentDate(dateStr string) (time.Time, error) {
+	var timeObj time.Time
+	var errTime error
+	timeObj = time.Now()
 	layout := "01-02-2006 15:04:05"
 	loc, _ := time.LoadLocation("Local")
-	timeObj, err := time.ParseInLocation(layout, dateStr, loc)
-	if err != nil {
-		return nil, err
+	timeObj, errTime = time.ParseInLocation(layout, dateStr, loc)
+	if errTime != nil {
+		return timeObj, errTime
 	}
 	return timeObj, nil
 }
@@ -76,12 +79,12 @@ func getChannelCounts(channelBounds string, channelData []string) []uint64 {
 	nrows = len(channelData)
 	for i = 0; i < nrows; i++ {
 		row = strings.Replace(channelData[i], "\r", "", -1)
-		row = strings.Trim(row)
+		row = strings.Trim(row, " ")
 		rowPts = strings.Split(row, " ")
 		ncols = len(rowPts)
 		for j = 0; j < ncols; j++ {
-			if rowPts[j] != " " {
-				counts[n], errCts = strings.ParseUint(rowPts[j], 10, 64)
+			if strings.Contains(rowPts[j], " ") == false {
+				counts[n], errCts = strconv.ParseUint(rowPts[j], 10, 64)
 				if errCts != nil {
 					counts[n] = 0
 				}

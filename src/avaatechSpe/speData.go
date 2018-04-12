@@ -13,7 +13,7 @@ type SPE struct {
 	Date     time.Time // From FileName(New), FileContents
 	Voltage  float64   // From FileName, FileContents
 	Filter   string    // From FileName
-	Current  float64   // From FileName, FileContents
+	Current  float64   // From FileName, FileContents [in mA]
 	Live     uint64    // From FileName, FileContents
 	DC       float64   // From FileName, FileContents
 	CC       float64   // From FileName, FileContents
