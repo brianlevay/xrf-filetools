@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const defaultChannelN int = 2048
+
 func (spe *SPE) ParseFileContents() error {
 	var cps, voltage, current, dc, cc, nextRow string
 	var measureTimes []string
@@ -37,11 +39,11 @@ func (spe *SPE) ParseFileContents() error {
 			spe.Current, _ = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$MEAS_TIM:") == true {
 			measureTimes = strings.Split(nextRow, " ")
-			spe.Live, _ = strconv.ParseUint(measureTimes[0], 64)
+			spe.Live, _ = strconv.ParseUint(measureTimes[0], 10, 64)
 		} else if strings.Contains(fileRows[i], "$DATE_MEA:") == true {
 			spe.Date, _ = convertContentDate(nextRow)
 		} else if strings.Contains(fileRows[i], "$DATA:") == true {
-			spe.Counts = getChannelCounts(fileRows, (i + 2))
+			spe.Counts = getChannelCounts(nextRow, fileRows[(i+2):])
 		}
 	}
 	return nil
@@ -57,6 +59,35 @@ func convertContentDate(dateStr string) (time.Time, error) {
 	return timeObj, nil
 }
 
-func getChannelCounts(fileRows []string, start int) []uint64 {
-
+func getChannelCounts(channelBounds string, channelData []string) []uint64 {
+	var counts []uint64
+	var i, j, n, nrows, ncols int
+	var row string
+	var rowPts []string
+	var errCts error
+	channelBoundPts := strings.Split(channelBounds, " ")
+	maxCh, errCh := strconv.ParseUint(channelBoundPts[len(channelBoundPts)-1], 10, 64)
+	if errCh != nil {
+		counts = make([]uint64, (maxCh + 1))
+	} else {
+		counts = make([]uint64, defaultChannelN)
+	}
+	n = 0
+	nrows = len(channelData)
+	for i = 0; i < nrows; i++ {
+		row = strings.Replace(channelData[i], "\r", "", -1)
+		row = strings.Trim(row)
+		rowPts = strings.Split(row, " ")
+		ncols = len(rowPts)
+		for j = 0; j < ncols; j++ {
+			if rowPts[j] != " " {
+				counts[n], errCts = strings.ParseUint(rowPts[j], 10, 64)
+				if errCts != nil {
+					counts[n] = 0
+				}
+				n++
+			}
+		}
+	}
+	return counts
 }

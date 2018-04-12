@@ -6,10 +6,6 @@ import (
 )
 
 func (spe *SPE) ParseFileName() error {
-	errFolder := spe.GetFolder()
-	if errFolder != nil {
-		return errFolder
-	}
 	if strings.Contains(spe.FileName, "!") == true {
 		errNew := spe.ParseNameNew()
 		if errNew != nil {
@@ -22,10 +18,6 @@ func (spe *SPE) ParseFileName() error {
 		}
 	}
 	return nil
-}
-
-func (spe *SPE) GetFolder() error {
-
 }
 
 func (spe *SPE) ParseNameNew() error {
