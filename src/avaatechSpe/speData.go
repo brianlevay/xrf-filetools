@@ -1,20 +1,28 @@
 package avaatechSpe
 
-import ()
+import (
+	"time"
+)
 
 type SPE struct {
-	Path    string
-	Name    string
-	Folder  string
-	Date    string
-	Voltage float64
-	Filter  string
-	Current float64
-	Live    uint64
-	DC      float64
-	CC      float64
-	X       float64
-	Y       float64
-	CPS     uint64
-	Counts  []uint64
+	FilePath string
+	FileName string
+	Opened   bool
+	Folder   string    // From FilePath
+	Sample   string    // From FileName
+	Date     time.Time // From FileName(New), FileContents
+	Voltage  float64   // From FileName, FileContents
+	Filter   string    // From FileName
+	Current  float64   // From FileName, FileContents
+	Live     uint64    // From FileName, FileContents
+	DC       float64   // From FileName, FileContents
+	CC       float64   // From FileName, FileContents
+	X        float64   // From FileName, FileContents
+	Y        float64   // From FileName, FileContents
+	CPS      uint64    // From FileContents
+	Counts   []uint64  // From FileContents
+}
+
+func (spe *SPE) Initialize() {
+	spe.Opened = false
 }
