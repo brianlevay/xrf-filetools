@@ -12,6 +12,9 @@ const defaultChannelN int = 2048
 func (spe *SPE) ParseFileContents() error {
 	var nextRow string
 	var measureTimes []string
+	var errArr []error
+	errArr = make([]error, 9)
+
 	fileBytes, errRead := ioutil.ReadFile(spe.FilePath)
 	if errRead != nil {
 		return errRead
@@ -24,26 +27,31 @@ func (spe *SPE) ParseFileContents() error {
 		nextRow = strings.Replace(nextRow, ",", ".", -1)
 		nextRow = strings.Trim(nextRow, " ")
 		if strings.Contains(fileRows[i], "$X_Position:") == true {
-			spe.X, _ = strconv.ParseFloat(nextRow, 64)
+			spe.X, errArr[0] = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$Y_Position:") == true {
-			spe.Y, _ = strconv.ParseFloat(nextRow, 64)
+			spe.Y, errArr[1] = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$Slit_DC:") == true {
-			spe.DC, _ = strconv.ParseFloat(nextRow, 64)
+			spe.DC, errArr[2] = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$Slit_CC:") == true {
-			spe.CC, _ = strconv.ParseFloat(nextRow, 64)
+			spe.CC, errArr[3] = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$TotalCPS:") == true {
-			spe.CPS, _ = strconv.ParseUint(nextRow, 10, 64)
+			spe.CPS, errArr[4] = strconv.ParseUint(nextRow, 10, 64)
 		} else if strings.Contains(fileRows[i], "$ACC_VOLT:") == true {
-			spe.Voltage, _ = strconv.ParseFloat(nextRow, 64)
+			spe.Voltage, errArr[5] = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$TUBE_CUR:") == true {
-			spe.Current, _ = strconv.ParseFloat(nextRow, 64)
+			spe.Current, errArr[6] = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$MEAS_TIM:") == true {
 			measureTimes = strings.Split(nextRow, " ")
-			spe.Live, _ = strconv.ParseUint(measureTimes[0], 10, 64)
+			spe.Live, errArr[7] = strconv.ParseUint(measureTimes[0], 10, 64)
 		} else if strings.Contains(fileRows[i], "$DATE_MEA:") == true {
-			spe.Date, _ = convertContentDate(nextRow)
+			spe.Date, errArr[8] = convertContentDate(nextRow)
 		} else if strings.Contains(fileRows[i], "$DATA:") == true {
 			spe.Counts = getChannelCounts(nextRow, fileRows[(i+2):])
+		}
+	}
+	for e := 0; e < len(errArr); e++ {
+		if errArr[e] != nil {
+			return errArr[e]
 		}
 	}
 	return nil
@@ -71,9 +79,9 @@ func getChannelCounts(channelBounds string, channelData []string) []uint64 {
 	channelBoundPts := strings.Split(channelBounds, " ")
 	maxCh, errCh := strconv.ParseUint(channelBoundPts[len(channelBoundPts)-1], 10, 64)
 	if errCh != nil {
-		counts = make([]uint64, (maxCh + 1))
-	} else {
 		counts = make([]uint64, defaultChannelN)
+	} else {
+		counts = make([]uint64, (maxCh + 1))
 	}
 	n = 0
 	nrows = len(channelData)

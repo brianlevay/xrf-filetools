@@ -22,31 +22,39 @@ func (spe *SPE) ParseFileName() error {
 }
 
 func (spe *SPE) ParseNameNew() error {
-	var err error
+	var errArr []error
+	errArr = make([]error, 8)
+
 	cleanName := strings.Replace(spe.FileName, ",", ".", -1)
 	namePts := strings.Split(cleanName, "!")
 	spe.Sample = namePts[0]
-	spe.Date, _ = convertNameDate(namePts[4], namePts[5])
-	spe.Live, _ = strconv.ParseUint(namePts[6], 10, 64)
-	spe.Voltage, _ = strconv.ParseFloat(namePts[7], 64)
-	spe.Current, err = strconv.ParseFloat(namePts[8], 64)
-	if err == nil {
+	spe.Date, errArr[0] = convertNameDate(namePts[4], namePts[5])
+	spe.Live, errArr[1] = strconv.ParseUint(namePts[6], 10, 64)
+	spe.Voltage, errArr[2] = strconv.ParseFloat(namePts[7], 64)
+	spe.Current, errArr[3] = strconv.ParseFloat(namePts[8], 64)
+	if errArr[3] == nil {
 		spe.Current = spe.Current / 1000
 	}
-	spe.X, _ = strconv.ParseFloat(namePts[9], 64)
-	spe.Y, _ = strconv.ParseFloat(namePts[10], 64)
+	spe.X, errArr[4] = strconv.ParseFloat(namePts[9], 64)
+	spe.Y, errArr[5] = strconv.ParseFloat(namePts[10], 64)
 	spe.Filter = namePts[11]
-	spe.DC, _ = strconv.ParseFloat(namePts[12], 64)
-	spe.CC, _ = strconv.ParseFloat(namePts[13], 64)
+	spe.DC, errArr[6] = strconv.ParseFloat(namePts[12], 64)
+	spe.CC, errArr[7] = strconv.ParseFloat(namePts[13], 64)
+	for e := 0; e < len(errArr); e++ {
+		if errArr[e] != nil {
+			return errArr[e]
+		}
+	}
 	return nil
 }
 
 func (spe *SPE) ParseNameOld() error {
-	var err error
 	var lastLetter, lastTwo, firstTwo, firstLetter, subStr string
 	var partLength int
 	var xFound bool
 	xFound = false
+	var errArr []error
+	errArr = make([]error, 7)
 
 	cleanName := strings.Replace(spe.FileName, ",", ".", -1)
 	namePts := strings.Split(cleanName, " ")
@@ -62,39 +70,44 @@ func (spe *SPE) ParseNameOld() error {
 			firstLetter = namePts[i][:1]
 			if lastLetter == "s" {
 				subStr = namePts[i][:partLength-1]
-				spe.Live, _ = strconv.ParseUint(subStr, 10, 64)
+				spe.Live, errArr[0] = strconv.ParseUint(subStr, 10, 64)
 			} else if lastTwo == "mm" {
 				if firstTwo == "DC" {
 					subStr = namePts[i][2 : partLength-2]
-					spe.DC, _ = strconv.ParseFloat(subStr, 64)
+					spe.DC, errArr[1] = strconv.ParseFloat(subStr, 64)
 				} else if firstTwo == "CC" {
 					subStr = namePts[i][2 : partLength-2]
-					spe.CC, _ = strconv.ParseFloat(subStr, 64)
+					spe.CC, errArr[2] = strconv.ParseFloat(subStr, 64)
 				} else if firstLetter == "X" {
 					subStr = namePts[i][1 : partLength-2]
-					spe.X, _ = strconv.ParseFloat(subStr, 64)
+					spe.X, errArr[3] = strconv.ParseFloat(subStr, 64)
 				} else if firstLetter == "Y" {
 					subStr = namePts[i][1 : partLength-2]
-					spe.Y, _ = strconv.ParseFloat(subStr, 64)
+					spe.Y, errArr[4] = strconv.ParseFloat(subStr, 64)
 				} else if xFound == false {
 					subStr = namePts[i][:partLength-2]
-					spe.X, _ = strconv.ParseFloat(subStr, 64)
+					spe.X, errArr[3] = strconv.ParseFloat(subStr, 64)
 					xFound = true
 				} else {
 					subStr = namePts[i][:partLength-2]
-					spe.Y, _ = strconv.ParseFloat(subStr, 64)
+					spe.Y, errArr[4] = strconv.ParseFloat(subStr, 64)
 				}
 			} else if lastTwo == "kV" {
 				subStr = namePts[i][:partLength-2]
-				spe.Voltage, _ = strconv.ParseFloat(subStr, 64)
+				spe.Voltage, errArr[5] = strconv.ParseFloat(subStr, 64)
 			} else if lastTwo == "uA" {
 				subStr = namePts[i][:partLength-2]
-				spe.Current, err = strconv.ParseFloat(subStr, 64)
-				if err == nil {
+				spe.Current, errArr[6] = strconv.ParseFloat(subStr, 64)
+				if errArr[6] == nil {
 					spe.Current = spe.Current / 1000
 				}
 				spe.Filter = namePts[i+1]
 			}
+		}
+	}
+	for e := 0; e < len(errArr); e++ {
+		if errArr[e] != nil {
+			return errArr[e]
 		}
 	}
 	return nil
