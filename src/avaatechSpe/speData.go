@@ -1,6 +1,7 @@
 package avaatechSpe
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -25,4 +26,23 @@ type SPE struct {
 
 func (spe *SPE) Initialize() {
 	spe.Opened = false
+}
+
+func (spe *SPE) Print(index int) {
+	fmt.Println("\nFilePath: ", spe.FilePath)
+	fmt.Println("FileName: ", spe.FileName)
+	fmt.Println("Opened: ", spe.Opened)
+	fmt.Println("Folder: ", spe.Folder)
+	fmt.Println("Sample: ", spe.Sample)
+	fmt.Println("Date: ", spe.Date)
+	fmt.Println("Voltage: ", spe.Voltage)
+	fmt.Println("Filter: ", spe.Filter)
+	fmt.Println("Current: ", spe.Current)
+	fmt.Println("Live: ", spe.Live)
+	fmt.Println("DC: ", spe.DC)
+	fmt.Println("CC: ", spe.CC)
+	fmt.Println("X: ", spe.X)
+	fmt.Println("Y: ", spe.Y)
+	fmt.Println("CPS :", spe.CPS)
+	fmt.Println("Counts[", index, "]: ", spe.Counts[index], "\n")
 }

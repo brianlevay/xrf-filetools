@@ -70,12 +70,13 @@ func convertContentDate(dateStr string) (time.Time, error) {
 	return timeObj, nil
 }
 
-func getChannelCounts(channelBounds string, channelData []string) []uint64 {
+func getChannelCounts(channelBounds string, channelRows []string) []uint64 {
 	var counts []uint64
 	var i, j, n, nrows, ncols int
-	var row string
+	var row, channelVal string
 	var rowPts []string
 	var errCts error
+
 	channelBoundPts := strings.Split(channelBounds, " ")
 	maxCh, errCh := strconv.ParseUint(channelBoundPts[len(channelBoundPts)-1], 10, 64)
 	if errCh != nil {
@@ -83,15 +84,16 @@ func getChannelCounts(channelBounds string, channelData []string) []uint64 {
 	} else {
 		counts = make([]uint64, (maxCh + 1))
 	}
+
 	n = 0
-	nrows = len(channelData)
+	nrows = len(channelRows)
 	for i = 0; i < nrows; i++ {
-		row = strings.Replace(channelData[i], "\r", "", -1)
-		row = strings.Trim(row, " ")
+		row = strings.Replace(channelRows[i], "\r", "", -1)
 		rowPts = strings.Split(row, " ")
 		ncols = len(rowPts)
 		for j = 0; j < ncols; j++ {
-			if strings.Contains(rowPts[j], " ") == false {
+			channelVal = strings.Replace(rowPts[j], " ", "", -1)
+			if channelVal != "" {
 				counts[n], errCts = strconv.ParseUint(rowPts[j], 10, 64)
 				if errCts != nil {
 					counts[n] = 0

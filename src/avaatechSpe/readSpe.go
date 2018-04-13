@@ -1,14 +1,12 @@
 package avaatechSpe
 
-import (
-	"os"
-)
+import ()
 
-func ReadSPE(path string, info os.FileInfo, open bool) (*SPE, error) {
+func ReadSPE(path string, name string, open bool) (*SPE, error) {
 	spe := new(SPE)
 	spe.Initialize()
 	spe.FilePath = path
-	spe.FileName = info.Name()
+	spe.FileName = name
 	errFolder := spe.ParseFolder()
 	if errFolder != nil {
 		return nil, errFolder
