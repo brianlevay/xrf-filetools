@@ -1,6 +1,6 @@
 #!/bin/bash
 
-go install timeUsage
+go install avaatechSpe
 go install app
 export GOOS=linux
 go build -o xrf-filetools-linux app
