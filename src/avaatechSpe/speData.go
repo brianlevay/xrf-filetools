@@ -17,13 +17,13 @@ type SPE struct {
 	Voltage  float64   // From FileName, FileContents
 	Filter   string    // From FileName
 	Current  float64   // From FileName, FileContents [in mA]
-	Live     uint64    // From FileName, FileContents
+	Live     int64     // From FileName, FileContents
 	DC       float64   // From FileName, FileContents
 	CC       float64   // From FileName, FileContents
 	X        float64   // From FileName, FileContents
 	Y        float64   // From FileName, FileContents
-	CPS      uint64    // From FileContents
-	Counts   []uint64  // From FileContents
+	CPS      int64     // From FileContents
+	Counts   []int64   // From FileContents
 }
 
 func (spe *SPE) Initialize() {
@@ -42,7 +42,7 @@ func (spe *SPE) Initialize() {
 	spe.X = 0.0
 	spe.Y = 0.0
 	spe.CPS = 0
-	spe.Counts = make([]uint64, defaultChannelN)
+	spe.Counts = make([]int64, defaultChannelN)
 }
 
 func (spe *SPE) Print(index int) {

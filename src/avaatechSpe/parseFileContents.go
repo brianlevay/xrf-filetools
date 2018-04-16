@@ -33,14 +33,14 @@ func (spe *SPE) ParseFileContents() error {
 		} else if strings.Contains(fileRows[i], "$Slit_CC:") == true {
 			spe.CC, errArr[3] = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$TotalCPS:") == true {
-			spe.CPS, errArr[4] = strconv.ParseUint(nextRow, 10, 64)
+			spe.CPS, errArr[4] = strconv.ParseInt(nextRow, 10, 64)
 		} else if strings.Contains(fileRows[i], "$ACC_VOLT:") == true {
 			spe.Voltage, errArr[5] = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$TUBE_CUR:") == true {
 			spe.Current, errArr[6] = strconv.ParseFloat(nextRow, 64)
 		} else if strings.Contains(fileRows[i], "$MEAS_TIM:") == true {
 			measureTimes = strings.Split(nextRow, " ")
-			spe.Live, errArr[7] = strconv.ParseUint(measureTimes[0], 10, 64)
+			spe.Live, errArr[7] = strconv.ParseInt(measureTimes[0], 10, 64)
 		} else if strings.Contains(fileRows[i], "$DATE_MEA:") == true {
 			spe.Date, errArr[8] = convertContentDate(nextRow)
 		} else if strings.Contains(fileRows[i], "$DATA:") == true {
@@ -68,17 +68,17 @@ func convertContentDate(dateStr string) (time.Time, error) {
 	return timeObj, nil
 }
 
-func getChannelCounts(channelBounds string, channelRows []string) []uint64 {
-	var counts []uint64
+func getChannelCounts(channelBounds string, channelRows []string) []int64 {
+	var counts []int64
 	var i, j, n, nrows, ncols int
 	var row, channelVal string
 	var rowPts []string
 	var errCts error
 
 	channelBoundPts := strings.Split(channelBounds, " ")
-	maxCh, errCh := strconv.ParseUint(channelBoundPts[len(channelBoundPts)-1], 10, 64)
+	maxCh, errCh := strconv.ParseInt(channelBoundPts[len(channelBoundPts)-1], 10, 64)
 	if errCh == nil {
-		counts = make([]uint64, (maxCh + 1))
+		counts = make([]int64, (maxCh + 1))
 	}
 
 	n = 0
@@ -90,7 +90,7 @@ func getChannelCounts(channelBounds string, channelRows []string) []uint64 {
 		for j = 0; j < ncols; j++ {
 			channelVal = strings.Replace(rowPts[j], " ", "", -1)
 			if channelVal != "" {
-				counts[n], errCts = strconv.ParseUint(rowPts[j], 10, 64)
+				counts[n], errCts = strconv.ParseInt(rowPts[j], 10, 64)
 				if errCts != nil {
 					counts[n] = 0
 				}

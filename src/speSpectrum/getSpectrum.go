@@ -2,15 +2,14 @@ package speSpectrum
 
 import (
 	avaatech "avaatechSpe"
-	"fmt"
 )
 
-const bgMult = 3
+const peakMin int64 = 1000
 
 func GetSpectrum(spe *avaatech.SPE) *Spectrum {
 	spect := new(Spectrum)
-	spect.MetaData(spe)
-	peaks := getPeaks(spe.Counts, bgMult)
-	fmt.Println(len(peaks)) //// FOR DEBUGGING ////
+	spect.SPE = spe
+	spect.PeakMin = peakMin
+	spect.GetPeaks()
 	return spect
 }

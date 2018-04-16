@@ -29,7 +29,7 @@ func (spe *SPE) ParseNameNew() error {
 	namePts := strings.Split(cleanName, "!")
 	spe.Sample = namePts[0]
 	spe.Date, errArr[0] = convertNameDate(namePts[4], namePts[5])
-	spe.Live, errArr[1] = strconv.ParseUint(namePts[6], 10, 64)
+	spe.Live, errArr[1] = strconv.ParseInt(namePts[6], 10, 64)
 	spe.Voltage, errArr[2] = strconv.ParseFloat(namePts[7], 64)
 	spe.Current, errArr[3] = strconv.ParseFloat(namePts[8], 64)
 	if errArr[3] == nil {
@@ -70,7 +70,7 @@ func (spe *SPE) ParseNameOld() error {
 			firstLetter = namePts[i][:1]
 			if lastLetter == "s" {
 				subStr = namePts[i][:partLength-1]
-				spe.Live, errArr[0] = strconv.ParseUint(subStr, 10, 64)
+				spe.Live, errArr[0] = strconv.ParseInt(subStr, 10, 64)
 			} else if lastTwo == "mm" {
 				if firstTwo == "DC" {
 					subStr = namePts[i][2 : partLength-2]
