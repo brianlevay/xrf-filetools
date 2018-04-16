@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+const defaultChannelN int = 2048
+
 type SPE struct {
 	FilePath string
 	FileName string
@@ -25,7 +27,22 @@ type SPE struct {
 }
 
 func (spe *SPE) Initialize() {
+	spe.FilePath = "n/a"
+	spe.FileName = "n/a"
 	spe.Opened = false
+	spe.Folder = "n/a"
+	spe.Sample = "n/a"
+	spe.Date = time.Date(2000, time.January, 01, 01, 0, 0, 0, time.UTC)
+	spe.Voltage = 0.0
+	spe.Filter = "n/a"
+	spe.Current = 0.0
+	spe.Live = 0
+	spe.DC = 0.0
+	spe.CC = 0.0
+	spe.X = 0.0
+	spe.Y = 0.0
+	spe.CPS = 0
+	spe.Counts = make([]uint64, defaultChannelN)
 }
 
 func (spe *SPE) Print(index int) {

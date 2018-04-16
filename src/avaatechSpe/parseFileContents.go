@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-const defaultChannelN int = 2048
-
 func (spe *SPE) ParseFileContents() error {
 	var nextRow string
 	var measureTimes []string
@@ -79,9 +77,7 @@ func getChannelCounts(channelBounds string, channelRows []string) []uint64 {
 
 	channelBoundPts := strings.Split(channelBounds, " ")
 	maxCh, errCh := strconv.ParseUint(channelBoundPts[len(channelBoundPts)-1], 10, 64)
-	if errCh != nil {
-		counts = make([]uint64, defaultChannelN)
-	} else {
+	if errCh == nil {
 		counts = make([]uint64, (maxCh + 1))
 	}
 
