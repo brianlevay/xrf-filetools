@@ -23,7 +23,7 @@ type SPE struct {
 	X        float64   // From FileName, FileContents
 	Y        float64   // From FileName, FileContents
 	CPS      int64     // From FileContents
-	Counts   []int64   // From FileContents
+	Counts   []float64 // From FileContents
 }
 
 func (spe *SPE) Initialize() {
@@ -42,7 +42,7 @@ func (spe *SPE) Initialize() {
 	spe.X = 0.0
 	spe.Y = 0.0
 	spe.CPS = 0
-	spe.Counts = make([]int64, defaultChannelN)
+	spe.Counts = make([]float64, defaultChannelN)
 }
 
 func (spe *SPE) Print(index int) {

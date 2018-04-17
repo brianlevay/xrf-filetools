@@ -68,8 +68,8 @@ func convertContentDate(dateStr string) (time.Time, error) {
 	return timeObj, nil
 }
 
-func getChannelCounts(channelBounds string, channelRows []string) []int64 {
-	var counts []int64
+func getChannelCounts(channelBounds string, channelRows []string) []float64 {
+	var counts []float64
 	var i, j, n, nrows, ncols int
 	var row, channelVal string
 	var rowPts []string
@@ -78,7 +78,7 @@ func getChannelCounts(channelBounds string, channelRows []string) []int64 {
 	channelBoundPts := strings.Split(channelBounds, " ")
 	maxCh, errCh := strconv.ParseInt(channelBoundPts[len(channelBoundPts)-1], 10, 64)
 	if errCh == nil {
-		counts = make([]int64, (maxCh + 1))
+		counts = make([]float64, (maxCh + 1))
 	}
 
 	n = 0
@@ -90,7 +90,7 @@ func getChannelCounts(channelBounds string, channelRows []string) []int64 {
 		for j = 0; j < ncols; j++ {
 			channelVal = strings.Replace(rowPts[j], " ", "", -1)
 			if channelVal != "" {
-				counts[n], errCts = strconv.ParseInt(rowPts[j], 10, 64)
+				counts[n], errCts = strconv.ParseFloat(rowPts[j], 64)
 				if errCts != nil {
 					counts[n] = 0
 				}

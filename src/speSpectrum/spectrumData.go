@@ -10,7 +10,8 @@ type Spectrum struct {
 }
 
 type Peak struct {
-	Channel int64
-	Area    int64
-	FWHM    int64
+	Channel float64
+	Area    float64
+	FWHM    float64
+	ChiSq   float64
 }

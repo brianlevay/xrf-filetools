@@ -14,7 +14,6 @@ func Process(spe *avaatech.SPE) *Spectrum {
 func (spect *Spectrum) ModelPeaks() {
 	var peakList []*Peak
 	var peak *Peak
-
 	inflections := getInflections(spect.SPE.Counts)
 	peakPositions := getPeakPositions(inflections)
 	nPeaks := len(peakPositions)
