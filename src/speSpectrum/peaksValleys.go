@@ -2,10 +2,11 @@ package speSpectrum
 
 import ()
 
-func (spect *Spectrum) GetPeaks() {
-	var peaks [][]int64
+func (spect *Spectrum) GetPeaks(peakMin int64) {
+	var peakList []*Peak
+	var peak *Peak
 	var baseA, heightA, baseB, heightB int64
-	var row []int64
+	var heightAve int64
 
 	inflections := getInflections(spect.SPE.Counts)
 	nInf := len(inflections)
@@ -16,15 +17,17 @@ func (spect *Spectrum) GetPeaks() {
 			heightA = inflections[i][1] - baseA
 			baseB = inflections[i+1][1]
 			heightB = inflections[i][1] - baseB
-			if (heightA >= peakMin) || (heightB >= peakMin) {
-				row = make([]int64, 2)
-				row[0] = inflections[i][0]
-				row[1] = inflections[i][1]
-				peaks = append(peaks, row)
+			heightAve = int64((float64(heightA) + float64(heightB)) / 2)
+			if heightAve >= peakMin {
+				peak = new(Peak)
+				peak.Channel = inflections[i][0]
+				peak.Height = heightAve
+				peak.Width = inflections[i+1][0] - inflections[i-1][0]
+				peakList = append(peakList, peak)
 			}
 		}
 	}
-	spect.Peaks = peaks
+	spect.Peaks = peakList
 }
 
 func getInflections(counts []int64) [][]int64 {
@@ -33,6 +36,11 @@ func getInflections(counts []int64) [][]int64 {
 	var row []int64
 
 	nChannels := len(counts)
+	row = make([]int64, 3)
+	row[0] = int64(0)
+	row[1] = counts[0]
+	row[2] = -1
+	inflections = append(inflections, row)
 	for i := 1; i < (nChannels - 1); i++ {
 		delPrev = counts[i] - counts[i-1]
 		delNext = counts[i+1] - counts[i]
@@ -50,5 +58,10 @@ func getInflections(counts []int64) [][]int64 {
 			inflections = append(inflections, row)
 		}
 	}
+	row = make([]int64, 3)
+	row[0] = int64(len(counts) - 1)
+	row[1] = counts[len(counts)-1]
+	row[2] = -1
+	inflections = append(inflections, row)
 	return inflections
 }
