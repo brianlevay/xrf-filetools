@@ -11,6 +11,6 @@ type Spectrum struct {
 
 type Peak struct {
 	Channel int64
-	Height  int64
-	Width   int64
+	Area    int64
+	FWHM    int64
 }

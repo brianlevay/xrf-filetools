@@ -18,7 +18,7 @@ func testReader() {
 	spect := spectrum.Process(spe)
 	fmt.Println("CPS:", spect.SPE.CPS)
 	for _, peak := range spect.Peaks {
-		fmt.Println("Channel:", peak.Channel, ", Height:", peak.Height, ", Width:", peak.Width)
+		fmt.Println("Channel:", peak.Channel)
 	}
 	return
 }

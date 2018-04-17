@@ -2,13 +2,13 @@ package speSpectrum
 
 import ()
 
-func (spect *Spectrum) GetPeaks(peakMin int64) {
-	var peakList []*Peak
-	var peak *Peak
+const peakCutoff int64 = 1000
+
+func getPeakPositions(inflections [][]int64) []int64 {
+	var peakPositions []int64
 	var baseA, heightA, baseB, heightB int64
 	var heightAve int64
 
-	inflections := getInflections(spect.SPE.Counts)
 	nInf := len(inflections)
 	for i := 1; i < nInf; i++ {
 		if (inflections[i][2] == 1) && (inflections[i-1][2] == -1) &&
@@ -18,16 +18,12 @@ func (spect *Spectrum) GetPeaks(peakMin int64) {
 			baseB = inflections[i+1][1]
 			heightB = inflections[i][1] - baseB
 			heightAve = int64((float64(heightA) + float64(heightB)) / 2)
-			if heightAve >= peakMin {
-				peak = new(Peak)
-				peak.Channel = inflections[i][0]
-				peak.Height = heightAve
-				peak.Width = inflections[i+1][0] - inflections[i-1][0]
-				peakList = append(peakList, peak)
+			if heightAve >= peakCutoff {
+				peakPositions = append(peakPositions, inflections[i][0])
 			}
 		}
 	}
-	spect.Peaks = peakList
+	return peakPositions
 }
 
 func getInflections(counts []int64) [][]int64 {
