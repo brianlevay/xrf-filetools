@@ -8,6 +8,7 @@ func Process(spe *avaatech.SPE) *Spectrum {
 	spect := new(Spectrum)
 	spect.SPE = spe
 	spect.ModelPeaks()
+	spect.AssignPeaks()
 	return spect
 }
 
@@ -18,8 +19,12 @@ func (spect *Spectrum) ModelPeaks() {
 	peakPositions := getPeakPositions(inflections)
 	nPeaks := len(peakPositions)
 	for i := 0; i < nPeaks; i++ {
-		peak = fitPeak(peakPositions[i], spect.SPE.Counts)
+		peak = fitPeakLinearSearch(peakPositions[i], spect.SPE.Counts)
 		peakList = append(peakList, peak)
 	}
 	spect.Peaks = peakList
+}
+
+func (spect *Spectrum) AssignPeaks() {
+
 }

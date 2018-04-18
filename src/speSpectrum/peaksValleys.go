@@ -1,7 +1,10 @@
 package speSpectrum
 
-import ()
+import (
+	"math"
+)
 
+const maxChannel int = 500
 const peakCutoff float64 = 1000.0
 
 func getPeakPositions(inflections [][]float64) [][]float64 {
@@ -36,7 +39,7 @@ func getInflections(counts []float64) [][]float64 {
 	var delPrev, delNext float64
 	var row []float64
 
-	nChannels := len(counts)
+	nChannels := int(math.Min(float64(maxChannel), float64(len(counts))))
 	row = make([]float64, 3)
 	row[0] = 0
 	row[1] = counts[0]

@@ -9,7 +9,7 @@ const maxStdev float64 = 30.0
 const stepStdev float64 = 0.2
 const fwhmMult float64 = 2.35482 /// approximation of 2*SQRT(2*LN(2))
 
-func fitPeak(peakPosition []float64, channels []float64) *Peak {
+func fitPeakLinearSearch(peakPosition []float64, channels []float64) *Peak {
 	var stdev, chiSqPrev, chiSqNew float64
 	peak := new(Peak)
 	peak.Channel = peakPosition[0]
