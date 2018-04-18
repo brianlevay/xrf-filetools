@@ -1,5 +1,11 @@
 package speSpectrum
 
+// Tests with bAxil on spectra from both instruments indicate that offset is
+// always << 20 eV, which is < 1 channel width. Thus, it can be
+// approximated as 0 eV for all fitting in this module.
+// Gain varies from ~20.0 eV/ch to ~20.4 eV/ch, which leads to channel differences of
+// ~2 at Si Ka and ~7 out at Fe Kb. Thus, gain needs to be a variable.
+
 const gain_keV float64 = 0.0200
 const offset_keV float64 = 0.0000
 
@@ -26,7 +32,12 @@ type Elements struct {
 	Fe_Kb *Peak
 }
 
-func elementCh(energy float64, gain float64, offset float64) float64 {
+func channelFromEnergy(energy float64, gain float64, offset float64) float64 {
 	channel := (energy - offset) / gain
 	return channel
+}
+
+func energyFromChannel(channel float64, gain float64, offset float64) float64 {
+	energy := (gain * channel) + offset
+	return energy
 }
