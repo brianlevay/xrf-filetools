@@ -10,6 +10,6 @@ func main() {
 
 	port := ":8080"
 	startupDisplay(port)
-	testReader()
+	testPackages()
 	http.ListenAndServe(port, nil)
 }
