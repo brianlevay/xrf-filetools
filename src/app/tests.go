@@ -31,10 +31,11 @@ func testPackages() {
 func testBatchProcess() {
 	rootPath := `./_misc/testData/standards/`
 	config := conf.ReadConfig()
-	jsonBytes, err := batchprocess.BatchProcess(rootPath, config)
+	batch, err := batchprocess.NewBatch(rootPath, config)
 	if err != nil {
 		fmt.Println(err)
-		return
 	}
-	fmt.Println(string(jsonBytes))
+	for _, item := range batch.List {
+		fmt.Println(item.Gain)
+	}
 }
