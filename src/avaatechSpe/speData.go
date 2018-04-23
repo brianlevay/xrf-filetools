@@ -1,29 +1,28 @@
 package avaatechSpe
 
 import (
-	"fmt"
 	"time"
 )
 
 const defaultChannelN int = 2048
 
 type SPE struct {
-	FilePath string
-	FileName string
-	Opened   bool
-	Folder   string    // From FilePath
-	Sample   string    // From FileName
-	Date     time.Time // From FileName(New), FileContents
-	Voltage  float64   // From FileName, FileContents
-	Filter   string    // From FileName
-	Current  float64   // From FileName, FileContents [in mA]
-	Live     int64     // From FileName, FileContents
-	DC       float64   // From FileName, FileContents
-	CC       float64   // From FileName, FileContents
-	X        float64   // From FileName, FileContents
-	Y        float64   // From FileName, FileContents
-	CPS      int64     // From FileContents
-	Counts   []float64 // From FileContents
+	FilePath string    `json:"-"`
+	FileName string    `json:"-"`
+	Opened   bool      `json:"-"`
+	Folder   string    `json:"Folder"`
+	Sample   string    `json:"Sample"`
+	Date     time.Time `json:"Date"`
+	Voltage  float64   `json:"Voltage"`
+	Filter   string    `json:"Filter"`
+	Current  float64   `json:"Current"`
+	Live     int64     `json:"Live"`
+	DC       float64   `json:"DC"`
+	CC       float64   `json:"CC"`
+	X        float64   `json:"X"`
+	Y        float64   `json:"Y"`
+	CPS      int64     `json:"CPS"`
+	Counts   []float64 `json:"-"`
 }
 
 func (spe *SPE) Initialize() {
@@ -43,23 +42,4 @@ func (spe *SPE) Initialize() {
 	spe.Y = 0.0
 	spe.CPS = 0
 	spe.Counts = make([]float64, defaultChannelN)
-}
-
-func (spe *SPE) Print(index int) {
-	fmt.Println("\nFilePath: ", spe.FilePath)
-	fmt.Println("FileName: ", spe.FileName)
-	fmt.Println("Opened: ", spe.Opened)
-	fmt.Println("Folder: ", spe.Folder)
-	fmt.Println("Sample: ", spe.Sample)
-	fmt.Println("Date: ", spe.Date)
-	fmt.Println("Voltage: ", spe.Voltage)
-	fmt.Println("Filter: ", spe.Filter)
-	fmt.Println("Current: ", spe.Current)
-	fmt.Println("Live: ", spe.Live)
-	fmt.Println("DC: ", spe.DC)
-	fmt.Println("CC: ", spe.CC)
-	fmt.Println("X: ", spe.X)
-	fmt.Println("Y: ", spe.Y)
-	fmt.Println("CPS :", spe.CPS)
-	fmt.Println("Counts[", index, "]: ", spe.Counts[index], "\n")
 }

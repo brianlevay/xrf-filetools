@@ -5,24 +5,24 @@ import (
 )
 
 type Spectrum struct {
-	SPE    *avaatech.SPE
-	Config *Configuration
-	Peaks  []*Peak
-	Lines  map[string]*Peak
-	Gain   float64
-	Offset float64
-	R2     float64
+	SPE    *avaatech.SPE    `json:"SPE"`
+	Config *Configuration   `json:"-"`
+	Peaks  []*Peak          `json:"-"`
+	Lines  map[string]*Peak `json:"Lines"`
+	Gain   float64          `json:"Gain"`
+	Offset float64          `json:"Offset"`
+	R2     float64          `json:"R2"`
 }
 
 type Peak struct {
-	Channel float64
-	Area    float64
-	FWHM    float64
-	ChiSq   float64
+	Channel float64 `json:"Channel"`
+	Area    float64 `json:"Area"`
+	FWHM    float64 `json:"FWHM"`
+	ChiSq   float64 `json:"ChiSq"`
 }
 
 type Configuration struct {
-	Threshold  float64
-	GainMinKeV float64
-	GainMaxKeV float64
+	Threshold  float64 `json:"-"`
+	GainMinKeV float64 `json:"-"`
+	GainMaxKeV float64 `json:"-"`
 }

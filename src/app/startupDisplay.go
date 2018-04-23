@@ -15,6 +15,6 @@ func startupDisplay(port string) {
 	fmt.Println("\nWelcome to the XRF File Tools Program\n")
 	fmt.Println("Please access the program via the interface, at:")
 	fmt.Println("http://localhost" + port)
-	fmt.Println("\nType 'Ctrl+C' or close this window to terminate the program.")
+	fmt.Println("\nType 'Ctrl+C' or close this window to terminate the program.\n")
 	return
 }
