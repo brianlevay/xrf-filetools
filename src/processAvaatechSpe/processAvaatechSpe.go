@@ -1,10 +1,11 @@
 package processAvaatechSpe
 
 import (
+	conf "configureSpe"
 	spereader "readAvaatechSpe"
 )
 
-func Process(spePath string, config *Configuration) (*Spectrum, error) {
+func Process(spePath string, config *conf.Configuration) (*Spectrum, error) {
 	spect := new(Spectrum)
 	spe, err := spereader.ReadSPE(spePath, true)
 	if err != nil {

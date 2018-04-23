@@ -1,14 +1,16 @@
 package main
 
 import (
+	batchprocess "batchProcessSpe"
+	conf "configureSpe"
 	"fmt"
-	speprocesser "processAvaatechSpe"
+	speprocess "processAvaatechSpe"
 )
 
 func testPackages() {
 	spePath := `./_misc/testData/standards/Standard_1 X  50.0mm   6s   9kV 250uA No-Filter DC10.0mm CC12.0mm Y  0.0mm Run1 Rep0 Sett Low.spe`
-	config := &speprocesser.Configuration{Threshold: 1000.0, GainMinKeV: 0.02000, GainMaxKeV: 0.02050}
-	spect, err := speprocesser.Process(spePath, config)
+	config := conf.ReadConfig()
+	spect, err := speprocess.Process(spePath, config)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -24,4 +26,15 @@ func testPackages() {
 	}
 	fmt.Println("Gain:", spect.Gain, " Offset:", spect.Offset, " R2:", spect.R2)
 	return
+}
+
+func testBatchProcess() {
+	rootPath := `./_misc/testData/standards/`
+	config := conf.ReadConfig()
+	jsonBytes, err := batchprocess.BatchProcess(rootPath, config)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(jsonBytes))
 }
