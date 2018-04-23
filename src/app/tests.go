@@ -15,10 +15,16 @@ func testReader() {
 		return
 	}
 	spe.Print(80)
-	spect := spectrum.Process(spe)
+
+	config := &spectrum.Configuration{Threshold: 1000.0, GainMinKeV: 0.02000, GainMaxKeV: 0.02050}
+	spect := spectrum.Process(spe, config)
 	fmt.Println("CPS:", spect.SPE.CPS)
 	for _, peak := range spect.Peaks {
 		fmt.Println("Channel:", peak.Channel, " Area:", peak.Area, " FWHM:", peak.FWHM, "ChiSq:", peak.ChiSq)
 	}
+	for line, peakAssigned := range spect.Lines {
+		fmt.Println("Line:", line, " Channel:", peakAssigned.Channel)
+	}
+	fmt.Println("Gain:", spect.Gain, " Offset:", spect.Offset, " R2:", spect.R2)
 	return
 }

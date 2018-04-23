@@ -5,13 +5,13 @@ import (
 )
 
 type Spectrum struct {
-	SPE       *avaatech.SPE
-	Threshold float64
-	Peaks     []*Peak
-	Lines     map[string]*Peak
-	Gain      float64
-	Offset    float64
-	R2        float64
+	SPE    *avaatech.SPE
+	Config *Configuration
+	Peaks  []*Peak
+	Lines  map[string]*Peak
+	Gain   float64
+	Offset float64
+	R2     float64
 }
 
 type Peak struct {
@@ -19,4 +19,10 @@ type Peak struct {
 	Area    float64
 	FWHM    float64
 	ChiSq   float64
+}
+
+type Configuration struct {
+	Threshold  float64
+	GainMinKeV float64
+	GainMaxKeV float64
 }

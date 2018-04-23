@@ -4,9 +4,6 @@ import (
 	"math"
 )
 
-const maxChannel int = 500
-const peakCutoff float64 = 1000.0
-
 func getPeakPositions(inflections [][]float64, peakCutoff float64) [][]float64 {
 	var peakPositions [][]float64
 	var row []float64
