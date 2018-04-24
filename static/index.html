@@ -10,82 +10,22 @@
             <div id="appTitle">XRF File Tools</div>
             <div id="appDesc">A suite of tools to help you make the most of your data in the XRF core scanning lab</div>
         </section>
-        <section id="navBar" class="bodyPt">
-            <div id="stdsTab" class="navTab">Standards Plot</div>
-            <div id="statsTab" class="navTab">Sample Stats</div>
-            <div id="timesTab" class="navTab">Time Usage</div>
-        </section>
         <section id="content" class="bodyPt">
             <section id="errorSect"></section>
             <section id="stdsPage" class="page">
                 <section id="stdsPathSect" class="pathSect">
                     <div class="inputDesc">
-                        <h3>Plot Standards Throughput Over Time</h3>
-                        <p>See the intensities of the standard analyses through time. Changes in 
-                        throughput can indicate deliberate changes in spot size, mechanical obstruction, a dying source, or 
-                        film contamination (could show increase or decrease).</p>
-                    </div>
-                    <div class="inputDiv">
-                        <span>Path to Standards:</span><br>
-                        <input id="stdsPath" type="text" name="stdsPath">
+                        <h3>Standards Data Through Time</h3>
                     </div>
                     <div class="buttonDiv">
-                        <button id="updateStds" type="button" onclick="standardsAPI()">Update Standards</button>
+                        <button id="updateStds" type="button" onclick="updateStandardsAPI()">Update Standards</button>
                     </div>
                 </section>
                 <section id="plotSect"></section>    
             </section>
-            <section id="statsPage" class="page">
-                <section id="statsPathSect" class="pathSect">
-                    <div class="inputDesc">
-                        <h3>Generate a Report of Samples and Excitation Conditions from SPE Files</h3>
-                        <p>See a list of sample names and parent folder names along with tallies of the numbers of files 
-                        for each voltage and filter combination. You can save the output to a csv file if you'd like.</p>
-                    </div>
-                    <div class="inputDiv">
-                        <span>Path to Original SPE Files:</span><br>
-                        <input id="srcPathStats" type="text" name="srcPathStats">
-                    </div>
-                    <div class="inputDiv">
-                        <br>
-                        <span>Save results to file?</span>
-                        <input id="saveStats" type="checkbox" name="saveStats" value="save">
-                        <br><br>
-                    </div>
-                    <div class="inputDiv stats-hideable">
-                        <span>Path to Save Output:</span><br>
-                        <input id="outPathStats" type="text" name="outPathStats">
-                    </div>
-                    <div class="inputDiv stats-hideable">
-                        <span>Output File Name (.csv automatically included):</span><br>
-                        <input id="outFileStats" type="text" name="outFileStats">
-                    </div>
-                    <div class="buttonDiv">
-                        <button id="getStats" type="button" onclick="statsAPI()">Get Stats</button>
-                    </div>
-                </section>
-                <section id="statsResults"></section>
-            </section>
-            <section id="timesPage" class="page">
-                <section id="timesPathSect" class="pathSect">
-                    <div class="inputDesc">
-                        <h3>Generate a Report of Time Usage from SPE Files</h3>
-                        <p>See a list of start and finish times per day, along with total elapsed time (hrs) and actual 
-                        analysis time (hrs).</p>
-                    </div>
-                    <div class="inputDiv">
-                        <span>Path to Original SPE Files:</span><br>
-                        <input id="srcPathTimes" type="text" name="srcPathTimes">
-                    </div>
-                    <div class="buttonDiv">
-                        <button id="getTimes" type="button" onclick="timesAPI()">Get Times</button>
-                    </div>
-                </section>
-                <section id="timesResults"></section>
-            </section>
         </section>
         <section id="footer" class="bodyPt">
-            Created by Brian LeVay (2017)
+            Created by Brian LeVay (2018)
         </section>
         
         <script src="controls.js"></script>
