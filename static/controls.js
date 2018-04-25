@@ -1,4 +1,4 @@
-/* global standards, processData, updatePlot */
+/* global standards, processData, updateUI, createPlot */
 
 //// Page Controls ////
 
@@ -36,6 +36,7 @@ function getStandardsAPI() {
     xhttp.open("GET", "/get_stds", true);
     xhttp.send();
     disableBtn("updateStds", true);
+    disableBtn("updateFilters", true);
 }
 
 function updateStandardsAPI() {
@@ -49,6 +50,7 @@ function updateStandardsAPI() {
     xhttp.open("GET", "/update_stds", true);
     xhttp.send();
     disableBtn("updateStds", true);
+    disableBtn("updateFilters", true);
 }
 
 function handlePlotResponse(xhttp) {
@@ -59,9 +61,11 @@ function handlePlotResponse(xhttp) {
         clearError();
         standards.data = response["Data"];
         processData();
-        updatePlot();
+        updateUI();
+        createPlot();
     }
     disableBtn("updateStds", false);
+    disableBtn("updateFilters", false);
 }
 
 //// Initial calls on page load ////

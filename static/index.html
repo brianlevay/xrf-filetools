@@ -27,7 +27,7 @@
                         <label>kVp</label>
                         <select id="list_kVp"></select>
                         <label>Filter</label>
-                        <select id="list_Filter">
+                        <select id="list_filter">
                             <option value="No-Filter">No-Filter</option>
                             <option value="Al">Al</option>
                             <option value="Pd-Thin">Pd-Thin</option>
@@ -40,9 +40,9 @@
                     <div>
                         <span class="filterType">Start Date:</span>
                         <label>Year</label>
-                        <input class="inputYr" id="start_Yr"></input>
+                        <input class="inputYr" id="start_yr"></input>
                         <label>Month</label>
-                        <select id="start_Mo">
+                        <select id="start_mo">
                             <option value=0>January</option>
                             <option value=1>February</option>
                             <option value=2>March</option>
@@ -57,14 +57,14 @@
                             <option value=11>December</option>
                         </select>
                         <label>Day</label>
-                        <input class="inputDay" id="start_Day"></input>
+                        <input class="inputDay" id="start_day"></input>
                     </div>
                     <div>
                         <span class="filterType">End Date:</span>
                         <label>Year</label>
-                        <input class="inputYr" id="end_Yr"></input>
+                        <input class="inputYr" id="end_yr"></input>
                         <label>Month</label>
-                        <select id="end_Mo">
+                        <select id="end_mo">
                             <option value=0>January</option>
                             <option value=1>February</option>
                             <option value=2>March</option>
@@ -79,12 +79,12 @@
                             <option value=11>December</option>
                         </select>
                         <label>Day</label>
-                        <input class="inputDay" id="end_Day"></input>
+                        <input class="inputDay" id="end_day"></input>
                     </div>
                     <div>
                         <span class="filterType">Values to Plot:</span>
                         <label>Source</label>
-                        <select id="list_Data">
+                        <select id="list_source">
                             <option value="CPS">CPS</option>
                             <option value="Al_Ka">Al_Ka</option>
                             <option value="Si_Ka">Si_Ka</option>
@@ -99,14 +99,14 @@
                             <option value="R2">R2</option>
                         </select>
                         <label>Line Data</label>
-                        <select id="list_Data">
+                        <select id="list_data">
                             <option value="Area">Area</option>
                             <option value="FWHM">FWHM</option>
                             <option value="ChiSq">ChiSq</option>
                         </select>
                     </div>
                     <div class="buttonDiv">
-                        <button id="updatePlot" type="button" onclick="updatePlot()">Update Plot</button>
+                        <button id="updateFilters" type="button" onclick="updateFilters()">Update Plot</button>
                     </div>
                 </section>
                 <section id="plotSect"></section>    
@@ -116,8 +116,8 @@
             Created by Brian LeVay (2018)
         </section>
         
-        <script src="controls.js"></script>
         <script src="d3.min.js"></script>
         <script src="standards.js"></script>
+        <script src="controls.js"></script>
     </body>
 </html>
