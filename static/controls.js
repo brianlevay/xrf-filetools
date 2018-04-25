@@ -1,4 +1,4 @@
-/* global updatePlot */
+/* global standards, processData, updatePlot */
 
 //// Page Controls ////
 
@@ -57,7 +57,9 @@ function handlePlotResponse(xhttp) {
         showError(response["Error"]);
     } else {
         clearError();
-        updatePlot(response["Data"]);
+        standards.data = response["Data"];
+        processData();
+        updatePlot();
     }
     disableBtn("updateStds", false);
 }

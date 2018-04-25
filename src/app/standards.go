@@ -21,9 +21,9 @@ func setStandardsHandler(stds *stds.Standards) {
 }
 
 func createResponse(stds *stds.Standards) []byte {
-	var errStart []byte = []byte("{\"Error\":\"")
-	var dataStart []byte = []byte("{\"Data\":\"")
-	var end []byte = []byte("\"}")
+	var errStart []byte = []byte("{\"Error\":")
+	var dataStart []byte = []byte("{\"Data\":")
+	var end []byte = []byte("}")
 	var resp []byte
 	if stds.Error != nil {
 		resp = append(errStart, []byte(stds.Error.Error())...)

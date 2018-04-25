@@ -1,5 +1,57 @@
 /* global d3 */
 
+let standards = {
+    data: [],
+    plot_kVp: 9,
+    plot_filter: "No-Filter",
+    plot_mA: 0.25,
+    plot_tmin: new Date(),
+    plot_tmax: new Date(),
+    plot_source: "CPS",
+    plot_data: "Area",
+    vals_kVp: {},
+    vals_mA: {},
+    vals_tmin: new Date(3000,0,1),
+    vals_tmax: new Date(1000,0,1)
+};
+
+function processData() {
+    standards.data.forEach(function(d){
+        d["SPE"]["Date"] = Date.parse(d["SPE"]["Date"]);
+        if (d["SPE"]["Date"] < standards.vals_tmin) {
+            standards.vals_tmin = d["SPE"]["Date"];
+        }
+        if (d["SPE"]["Date"] > standards.vals_tmax) {
+            standards.vals_tmax = d["SPE"]["Date"];
+        }
+        standards.vals_kVp[d["SPE"]["Voltage"]] = true;
+        standards.vals_mA[d["SPE"]["Current"]] = true;
+    });
+}
+
+function filterPoint(d) {
+    let xPass = false;
+    let sizePass = false;
+    let excitePass = false;
+    let datePass = false;
+    let meta = d["SPE"];
+    if ((meta["X"] == 50) || (meta["X"] == 100) || (meta["X"] == 150)) {
+        xPass = true;
+    }
+    if ((meta["DC"] == 10) && (meta["CC"] == 12)) {
+        sizePass = true;
+    }
+    if ((meta["Voltage"] == standards.plot_kVp) && 
+        (meta["Filter"] == standards.plot_filter) && 
+        (meta["Current"] == standards.plot_mA)) {
+        excitePass = true;
+    }
+    if ((meta["Date"] >= standards.plot_tmin) && (meta["Date"] <= standards.plot_tmax)) {
+        datePass = true;
+    }
+    return xPass && sizePass && excitePass && datePass;
+}
+
 // Initial chart setup //
 
 let SVGwidth = 1200,
@@ -48,12 +100,6 @@ svg.append("text")
     .attr("y", 0 - Math.round((margin.left/1.5)))
     .style("text-anchor", "middle")
     .text("CPS");
-    
-svg.append("text")
-    .attr("class", "chartTitle")
-    .attr("transform", "translate(" + (width/2) + ", " + (-20) + ")")
-    .style("text-anchor", "middle")
-    .text("Standards Intensity Through Time");
         
 let series = [50,100,150];
 let legendY = height - 100;
