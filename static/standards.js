@@ -52,6 +52,24 @@ function filterPoint(d) {
     return xPass && sizePass && excitePass && datePass;
 }
 
+function getXvalue(d) {
+    return d["SPE"]["Date"];
+}
+
+function getYvalue(d) {
+    if (standards.plot_source == "CPS") {
+        return d["SPE"]["CPS"];
+    } else if (standards.plot_source == "Gain") {
+        return d["Gain"];
+    } else if (standards.plot_source == "Offset") {
+        return d["Offset"];
+    } else if (standards.plot_source == "R2") {
+        return d["R2"];
+    } else {
+        return d["Lines"][standards.plot_source][standards.plot_data];
+    }
+}
+
 // Initial chart setup //
 
 let SVGwidth = 1200,
@@ -72,29 +90,21 @@ let tooltip = d3.select("#plotSect").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
     
-let xScaleInit = d3.scaleTime().range([0, width]),
-    xAxisInit = d3.axisBottom(xScaleInit);
-    
-let yScaleInit = d3.scaleLinear().range([height, 0]),
-    yAxisInit = d3.axisLeft(yScaleInit);
-        
 svg.append("g")
     .attr("class", "xAxis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxisInit);
+    .attr("transform", "translate(0," + height + ")");
     
 svg.append("text")
-    .attr("class", "axisLabel")
+    .attr("class", "xAxisLabel")
     .attr("transform", "translate(" + (width/2) + " ," + (height + 50) + ")")
     .style("text-anchor", "middle")
     .text("Date");
         
 svg.append("g")
-    .attr("class", "yAxis")
-    .call(yAxisInit);
+    .attr("class", "yAxis");
         
 svg.append("text")
-    .attr("class", "axisLabel")
+    .attr("class", "yAxisLabel")
     .attr("transform", "rotate(-90)")
     .attr("x", 0 - (height/2))
     .attr("y", 0 - Math.round((margin.left/1.5)))
@@ -122,37 +132,6 @@ legend.append("text")
     .style("text-anchor", "end")
     .text(function(d) { return d; });
 
-// functions for updating the chart and manipulating the data //
-
-function filterPoints(d) {
-    let xPass = false;
-    let excitePass = false;
-    if ((d["X"] == 50) || (d["X"] == 100) || (d["X"] == 150)) {
-        xPass = true;
-    }
-    if ((d["KVp"] == 9) && (d["Curr"] == 0.25) && (d["DC"] == 10) && (d["CC"] == 12)) {
-        excitePass = true;
-    }
-    return xPass && excitePass;
-}
-
-// 08-01-2017 16:15:15 //
-function parseDate(dateStr) {
-    let dateParts = dateStr.split(" ");
-    let calDate = dateParts[0];
-    let timeDate = dateParts[1];
-    let calParts = calDate.split("-");
-    let timeParts = timeDate.split(":");
-    let year = +calParts[2];
-    let month = +calParts[0] - 1;
-    let day = +calParts[1];
-    let hour = +timeParts[0];
-    let minute = +timeParts[1];
-    let second = +timeParts[2];
-    let dateObj = new Date(year, month, day, hour, minute, second);
-    return dateObj;
-}
-
 function color(x) {
     if (x == 50) {
         return "steelblue";
@@ -165,39 +144,27 @@ function color(x) {
 }
 
 function tooltipHTML(d) {
-    let dateStr = (d["Date"].getMonth() + 1) + "/" + (d["Date"].getDate()) + "/" + (d["Date"].getFullYear());
-    let html = d["Name"] + "<br/>X = " + d["X"] + "<br/>";
-    html = html + dateStr + "<br/>" + d["CPS"];
+    let x = getXvalue(d);
+    let y = getYvalue(d);
+    let dateStr = (x.getMonth() + 1) + "/" + (x.getDate()) + "/" + (x.getFullYear());
+    let html = d["SPE"]["Sample"] + "<br/>X = " + d["SPE"]["X"] + "<br/>";
+    html = html + dateStr + "<br/>" + y;
     return html;
 }
 
-function updatePlot(rawData) {
-    // Name,X,Date,CPS,kVp,mA,DC Slit,CC Slit
-    var data = rawData.map(function(d) {
-        var p = JSON.parse(d);
-        var f = {};
-        f["Name"] = p["Name"];
-        f["X"] = +p["X"];
-        f["Date"] = parseDate(p["Date"]);
-        f["CPS"] = +p["CPS"];
-        f["KVp"] = +p["KVp"];
-        f["Curr"] = +p["Curr"];
-        f["DC"] = +p["DC"];
-        f["CC"] = +p["CC"];
-        return f;
-    });
-    let filteredData = data.filter(filterPoints);
+function updatePlot() {
+    let filteredData = standards.data.filter(filterPoint);
     
-    let xValue = function(d) { return d["Date"]; };
     let xScale = d3.scaleTime().range([0, width]);
     let xAxis = d3.axisBottom(xScale);
+    let xValue = function(d) { return getXvalue(d); };
     let xMap = function(d) { return xScale(xValue(d)); };
-    xScale.domain([d3.min(filteredData, xValue), d3.max(filteredData, xValue)]);
+    xScale.domain([standards.plot_tmin, standards.plot_tmax]);
     
-    let yValue = function(d) { return d["CPS"]; };
     let yScale = d3.scaleLinear().range([height, 0]);
     let yAxis = d3.axisLeft(yScale);
     let yMap = function(d) { return yScale(yValue(d)); };
+    let yValue = function(d) { return getYvalue(d); };
     yScale.domain([0, (d3.max(filteredData, yValue)*1.1)]);
     
     let plotSect = document.getElementById("plotSect");
@@ -227,5 +194,8 @@ function updatePlot(rawData) {
     
     svg.select(".yAxis")
         .call(yAxis);
+        
+    svg.select(".yAxisLabel")
+        .text()
 }
     
