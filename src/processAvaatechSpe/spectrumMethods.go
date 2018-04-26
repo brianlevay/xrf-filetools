@@ -4,11 +4,11 @@ import (
 	"math"
 )
 
-func (spect *Spectrum) ModelPeaks() {
+func (spect *Spectrum) ModelPeaks(threshold float64) {
 	var peakList []*Peak
 	var peak *Peak
 	inflections := getInflections(spect.SPE.Counts)
-	peakPositions := getPeakPositions(inflections, spect.Config.Threshold)
+	peakPositions := getPeakPositions(inflections, threshold)
 	nPeaks := len(peakPositions)
 	for i := 0; i < nPeaks; i++ {
 		peak = fitPeakLinearSearch(peakPositions[i], spect.SPE.Counts)
@@ -24,7 +24,7 @@ func (spect *Spectrum) ModelPeaks() {
 // ~2 at Si Ka and ~7 out at Fe Kb. Thus, gain needs to be a variable. Min and Max
 // allowable gain values will be passed through when calling "Process"
 
-func (spect *Spectrum) AssignPeaks() {
+func (spect *Spectrum) AssignPeaks(gainMinKeV float64, gainMaxKeV float64) {
 	var lineMap map[string]*Peak
 	var peak *Peak
 	var startSearch int
@@ -36,8 +36,8 @@ func (spect *Spectrum) AssignPeaks() {
 	for i := 0; i < nPeaks; i++ {
 		peak = spect.Peaks[i]
 		for j := startSearch; j < nLines; j++ {
-			minLineCh = lineList[j].Energy / spect.Config.GainMaxKeV // maxGain => minCh
-			maxLineCh = lineList[j].Energy / spect.Config.GainMinKeV
+			minLineCh = lineList[j].Energy / gainMaxKeV // maxGain => minCh
+			maxLineCh = lineList[j].Energy / gainMinKeV
 			if (peak.Channel >= minLineCh) && (peak.Channel <= maxLineCh) {
 				lineMap[lineList[j].Name] = peak
 				startSearch = j + 1

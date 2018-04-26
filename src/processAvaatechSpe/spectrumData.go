@@ -1,18 +1,16 @@
 package processAvaatechSpe
 
 import (
-	conf "configureSpe"
 	spereader "readAvaatechSpe"
 )
 
 type Spectrum struct {
-	SPE    *spereader.SPE      `json:"SPE"`
-	Config *conf.Configuration `json:"-"`
-	Peaks  []*Peak             `json:"-"`
-	Lines  map[string]*Peak    `json:"Lines"`
-	Gain   float64             `json:"Gain"`
-	Offset float64             `json:"Offset"`
-	R2     float64             `json:"R2"`
+	SPE    *spereader.SPE   `json:"SPE"`
+	Peaks  []*Peak          `json:"-"`
+	Lines  map[string]*Peak `json:"Lines"`
+	Gain   float64          `json:"Gain"`
+	Offset float64          `json:"Offset"`
+	R2     float64          `json:"R2"`
 }
 
 type Peak struct {

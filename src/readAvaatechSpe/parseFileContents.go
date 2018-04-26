@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func (spe *SPE) ParseFileContents() error {
+func (spe *SPE) ParseFileContents(UTCoffset string) error {
 	var nextRow string
 	var measureTimes []string
 	var errArr []error
@@ -42,7 +42,7 @@ func (spe *SPE) ParseFileContents() error {
 			measureTimes = strings.Split(nextRow, " ")
 			spe.Live, errArr[7] = strconv.ParseInt(measureTimes[0], 10, 64)
 		} else if strings.Contains(fileRows[i], "$DATE_MEA:") == true {
-			spe.Date, errArr[8] = convertContentDate(nextRow)
+			spe.Date, errArr[8] = convertContentDate(nextRow, UTCoffset)
 		} else if strings.Contains(fileRows[i], "$DATA:") == true {
 			spe.Counts = getChannelCounts(nextRow, fileRows[(i+2):])
 		}
@@ -55,13 +55,13 @@ func (spe *SPE) ParseFileContents() error {
 	return nil
 }
 
-func convertContentDate(dateStr string) (time.Time, error) {
+func convertContentDate(dateStr string, UTCoffset string) (time.Time, error) {
 	var timeObj time.Time
 	var errTime error
 	timeObj = time.Now()
-	layout := "01-02-2006 15:04:05"
-	loc, _ := time.LoadLocation("Local")
-	timeObj, errTime = time.ParseInLocation(layout, dateStr, loc)
+	layout := "01-02-2006 15:04:05 -07:00"
+	dateStr = dateStr + " " + UTCoffset
+	timeObj, errTime = time.Parse(layout, dateStr)
 	if errTime != nil {
 		return timeObj, errTime
 	}

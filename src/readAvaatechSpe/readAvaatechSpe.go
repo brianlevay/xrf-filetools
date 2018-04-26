@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 )
 
-func ReadSPE(spePath string, open bool) (*SPE, error) {
+func ReadSPE(spePath string, UTCoffset string, open bool) (*SPE, error) {
 	spe := new(SPE)
 	spe.Initialize()
 	spe.FilePath = spePath
@@ -19,7 +19,7 @@ func ReadSPE(spePath string, open bool) (*SPE, error) {
 		return nil, errName
 	}
 	if open == true {
-		errCont := spe.ParseFileContents()
+		errCont := spe.ParseFileContents(UTCoffset)
 		if errCont != nil {
 			return nil, errCont
 		}
