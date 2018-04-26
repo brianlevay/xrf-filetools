@@ -6,31 +6,28 @@ import (
 
 const maxChannel int = 500
 
-func getPeakPositions(inflections [][]float64, peakCutoff float64) [][]float64 {
-	var peakPositions [][]float64
-	var row []float64
-	var baseA, heightA, baseB, heightB float64
-	var heightAve float64
+func getPeaks(inflections [][]float64, peakCutoff float64) []*Peak {
+	var peakList []*Peak
+	var peak *Peak
+	var heightA, heightB, heightAve float64
 
 	nInf := len(inflections)
 	for i := 1; i < nInf; i++ {
 		if (inflections[i][2] == 1) && (inflections[i-1][2] == -1) &&
 			(inflections[i+1][2] == -1) {
-			baseA = inflections[i-1][1]
-			heightA = inflections[i][1] - baseA
-			baseB = inflections[i+1][1]
-			heightB = inflections[i][1] - baseB
+			heightA = inflections[i][1] - inflections[i-1][1]
+			heightB = inflections[i][1] - inflections[i+1][1]
 			heightAve = (heightA + heightB) / 2
 			if heightAve >= peakCutoff {
-				row = make([]float64, 3)
-				row[0] = inflections[i][0]
-				row[1] = inflections[i-1][0]
-				row[2] = inflections[i+1][0]
-				peakPositions = append(peakPositions, row)
+				peak = new(Peak)
+				peak.Channel = inflections[i][0]
+				peak.HeightAbs = inflections[i][1]
+				peak.HeightRel = heightAve
+				peakList = append(peakList, peak)
 			}
 		}
 	}
-	return peakPositions
+	return peakList
 }
 
 func getInflections(counts []float64) [][]float64 {

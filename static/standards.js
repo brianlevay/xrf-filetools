@@ -8,7 +8,7 @@ let standards = {
     plot_tmin: undefined,
     plot_tmax: undefined,
     plot_source: "Al_Ka",
-    plot_data: "Area",
+    plot_data: "HeightAbs",
     vals_kVp: {},
     vals_mA: {}
 };
@@ -66,12 +66,6 @@ function xValue(d) {
 function yValue(d) {
     if (standards.plot_source === "CPS") {
         return d["SPE"]["CPS"];
-    } else if (standards.plot_source === "Gain") {
-        return d["Gain"];
-    } else if (standards.plot_source === "Offset") {
-        return d["Offset"];
-    } else if (standards.plot_source === "R2") {
-        return d["R2"];
     } else {
         if(d["Lines"].hasOwnProperty(standards.plot_source)) {
             return d["Lines"][standards.plot_source][standards.plot_data];
@@ -84,12 +78,6 @@ function yValue(d) {
 function yLabel() {
     if (standards.plot_source === "CPS") {
         return "CPS";
-    } else if (standards.plot_source === "Gain") {
-        return "Gain";
-    } else if (standards.plot_source === "Offset") {
-        return "Offset";
-    } else if (standards.plot_source === "R2") {
-        return "R2";
     } else {
         return standards.plot_source + " " + standards.plot_data;
     }
@@ -239,7 +227,7 @@ svg.append("text")
     .attr("x", 0 - (height/2))
     .attr("y", 0 - Math.round((margin.left/1.5)))
     .style("text-anchor", "middle")
-    .text("Throughput (CPS)");
+    .text("CPS");
         
 let series = [50,100,150];
 let legendY = height - 100;

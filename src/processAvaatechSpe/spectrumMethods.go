@@ -1,19 +1,14 @@
 package processAvaatechSpe
 
-import (
-	"math"
-)
+import ()
+
+// Right now, this only gets the maximum intensities of the peaks and the height relative to
+// the nearest saddle points. A previous attempt to model the peaks with Gaussian curves
+// produced very noisy results and was dropped. I might try again another time.
 
 func (spect *Spectrum) ModelPeaks(threshold float64) {
-	var peakList []*Peak
-	var peak *Peak
 	inflections := getInflections(spect.SPE.Counts)
-	peakPositions := getPeakPositions(inflections, threshold)
-	nPeaks := len(peakPositions)
-	for i := 0; i < nPeaks; i++ {
-		peak = fitPeakLinearSearch(peakPositions[i], spect.SPE.Counts)
-		peakList = append(peakList, peak)
-	}
+	peakList := getPeaks(inflections, threshold)
 	spect.Peaks = peakList
 }
 
@@ -46,31 +41,4 @@ func (spect *Spectrum) AssignPeaks(gainMinKeV float64, gainMaxKeV float64) {
 		}
 	}
 	spect.Lines = lineMap
-}
-
-func (spect *Spectrum) CalculateEnergyScale() {
-	var sumX, sumY, sumXX, sumXY, sumYY float64
-	var aveX, aveY float64
-	var Sxx, Syy, Sxy float64
-	var slope, intercept, r, r2 float64
-	nLines := float64(len(spect.Lines))
-	for line, peak := range spect.Lines {
-		sumX = sumX + peak.Channel
-		sumY = sumY + lineMap[line]
-		sumXX = sumXX + (peak.Channel)*(peak.Channel)
-		sumXY = sumXY + (peak.Channel)*(lineMap[line])
-		sumYY = sumYY + (lineMap[line])*(lineMap[line])
-	}
-	aveX = sumX / nLines
-	aveY = sumY / nLines
-	Sxx = (sumXX / nLines) - aveX*aveX
-	Syy = (sumYY / nLines) - aveY*aveY
-	Sxy = (sumXY / nLines) - aveX*aveY
-	slope = Sxy / Sxx
-	intercept = aveY - slope*aveX
-	r = Sxy / (math.Sqrt(Sxx) * math.Sqrt(Syy))
-	r2 = r * r
-	spect.Gain = slope
-	spect.Offset = intercept
-	spect.R2 = r2
 }
