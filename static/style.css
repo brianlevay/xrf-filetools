@@ -43,6 +43,18 @@ body {
     padding: 10px;
 }
 
+.pageTitle {
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.sectionTitle {
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: left;
+}
+
 .filterType {
     display: inline-block;
     padding: 5px;

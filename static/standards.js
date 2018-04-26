@@ -301,9 +301,15 @@ function color(x) {
 function tooltipHTML(d) {
     let x = xValue(d);
     let y = yValue(d);
+    let yStr;
+    if (y % 1 != 0) {
+        yStr = y.toFixed(2);
+    } else {
+        yStr = y.toFixed(0);
+    }
     let dateStr = (x.getMonth() + 1) + "/" + (x.getDate()) + "/" + (x.getFullYear());
     let html = d["SPE"]["Sample"] + "<br/>X = " + d["SPE"]["X"] + "<br/>";
-    html = html + dateStr + "<br/>" + y;
+    html = html + dateStr + "<br/>" + yStr;
     return html;
 }
 

@@ -14,14 +14,10 @@
             <section id="errorSect"></section>
             <section id="stdsPage" class="page">
                 <section id="stdsHeaderSect" class="pageSect">
-                    <div class="inputDesc">
-                        <h3>Standards Data Through Time</h3>
-                    </div>
-                    <div class="buttonDiv">
-                        <button id="updateStds" type="button" onclick="updateStandardsAPI()">Refresh Data</button>
-                    </div>
+                    <div class="pageTitle">Standards Data Through Time</div>
                 </section>
                 <section id="stdsFilterSect" class="pageSect">
+                    <div class="sectionTitle">Plot Filters</div>
                     <div class="filterType">
                         <span>Values to Plot:</span><br>
                         <div>
@@ -150,6 +146,7 @@
                     </div>
                     <div class="buttonDiv">
                         <button id="updateFilters" type="button" onclick="updateFilters()">Update Plot</button>
+                        <button id="updateStds" type="button" onclick="updateStandardsAPI()">Fetch New Data</button>
                     </div>
                 </section>
                 <section id="plotSect"></section>    

@@ -14,7 +14,9 @@ func setStandardsHandler(stds *stds.Standards) {
 	})
 
 	http.HandleFunc("/update_stds", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Updating standards with new data...")
 		stds.UpdateStds()
+		log.Println("Standards updating complete.")
 		resp := createResponse(stds)
 		w.Write(resp)
 	})
