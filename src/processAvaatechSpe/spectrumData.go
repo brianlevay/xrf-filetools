@@ -6,7 +6,7 @@ import (
 
 type Spectrum struct {
 	SPE   *spereader.SPE   `json:"SPE"`
-	Peaks []*Peak          `json:"Peaks"`
+	Peaks []*Peak          `json:"-"`
 	Lines map[string]*Peak `json:"Lines"`
 }
 

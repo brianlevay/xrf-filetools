@@ -59,7 +59,7 @@ func convertContentDate(dateStr string, UTCoffset string) (time.Time, error) {
 	var timeObj time.Time
 	var errTime error
 	timeObj = time.Now()
-	layout := "01-02-2006 15:04:05 -07:00"
+	layout := "01-02-2006 15:04:05 -07"
 	dateStr = dateStr + " " + UTCoffset
 	timeObj, errTime = time.Parse(layout, dateStr)
 	if errTime != nil {
@@ -80,7 +80,6 @@ func getChannelCounts(channelBounds string, channelRows []string) []float64 {
 	if errCh == nil {
 		counts = make([]float64, (maxCh + 1))
 	}
-
 	n = 0
 	nrows = len(channelRows)
 	for i = 0; i < nrows; i++ {

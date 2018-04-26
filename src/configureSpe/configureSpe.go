@@ -1,6 +1,11 @@
 package configureSpe
 
-import ()
+import (
+	"io/ioutil"
+	"log"
+	"strconv"
+	"strings"
+)
 
 type Configuration struct {
 	UTCoffset  string  `json:"-"`
@@ -11,12 +16,41 @@ type Configuration struct {
 }
 
 func ReadConfig() *Configuration {
-	var config = &Configuration{
-		UTCoffset:  "-05:00",
-		StdsPath:   `./_misc/testData/standards/`,
-		Threshold:  1000.0,
-		GainMinKeV: 0.02000,
-		GainMaxKeV: 0.02050,
+	var fileRows, rowPts []string
+	var key, value string
+
+	config := new(Configuration)
+	fileBytes, err := ioutil.ReadFile("configuration.cfg")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fileStr := string(fileBytes)
+	fileRows = strings.Split(fileStr, "\n")
+	nRows := len(fileRows)
+	for i := 0; i < nRows; i++ {
+		rowPts = strings.Split(fileRows[i], ":")
+		key = strings.Trim(rowPts[0], " ")
+		value = strings.Trim(rowPts[1], " ")
+		if key == "UTCoffset" {
+			config.UTCoffset = value
+		} else if key == "StdsPath" {
+			config.StdsPath = value
+		} else if key == "Threshold" {
+			config.Threshold, err = strconv.ParseFloat(value, 64)
+			if err != nil {
+				config.Threshold = 1000.0
+			}
+		} else if key == "GainMinKeV" {
+			config.GainMinKeV, err = strconv.ParseFloat(value, 64)
+			if err != nil {
+				config.GainMinKeV = 0.01980
+			}
+		} else if key == "GainMaxKeV" {
+			config.GainMaxKeV, err = strconv.ParseFloat(value, 64)
+			if err != nil {
+				config.GainMaxKeV = 0.02050
+			}
+		}
 	}
 	return config
 }

@@ -7,7 +7,7 @@ let standards = {
     plot_mA: 0.25,
     plot_tmin: undefined,
     plot_tmax: undefined,
-    plot_source: "Al_Ka",
+    plot_source: "CPS",
     plot_data: "HeightAbs",
     vals_kVp: {},
     vals_mA: {}
@@ -79,7 +79,13 @@ function yLabel() {
     if (standards.plot_source === "CPS") {
         return "CPS";
     } else {
-        return standards.plot_source + " " + standards.plot_data;
+        if (standards.plot_data === "HeightAbs") {
+            return standards.plot_source + " " + "Height, Abs";
+        } else if (standards.plot_data === "HeightRel") {
+            return standards.plot_source + " " + "Height, Rel";
+        } else {
+            return standards.plot_source + " " + "Channel";
+        }
     }
 }
 
