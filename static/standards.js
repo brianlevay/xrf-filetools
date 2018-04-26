@@ -28,10 +28,10 @@ function processData() {
         standards.vals_mA[d["SPE"]["Current"]] = true;
     });
     if (standards.plot_tmin === undefined) {
-        standards.plot_tmin = vals_tmin;
+        standards.plot_tmin = new Date(vals_tmin.valueOf());
     }
     if (standards.plot_tmax === undefined) {
-        standards.plot_tmax = vals_tmax;
+        standards.plot_tmax = new Date(vals_tmax.valueOf());
     }
     return;
 }
@@ -73,7 +73,11 @@ function yValue(d) {
     } else if (standards.plot_source === "R2") {
         return d["R2"];
     } else {
-        return d["Lines"][standards.plot_source][standards.plot_data];
+        if(d["Lines"].hasOwnProperty(standards.plot_source)) {
+            return d["Lines"][standards.plot_source][standards.plot_data];
+        } else {
+            return 0;
+        }
     }
 }
 
@@ -160,7 +164,8 @@ function updateFilters() {
     standards.plot_source = list_source.value;
     standards.plot_data = list_data.value;
     
-    /*let start_yr_val = (+start_yr.value);
+    console.log(standards.plot_tmin, standards.plot_tmax);
+    let start_yr_val = (+start_yr.value);
     let start_mo_val = (+start_mo.value);
     let start_day_val = (+start_day.value);
     let end_yr_val = (+end_yr.value);
@@ -169,7 +174,8 @@ function updateFilters() {
     if (!isNaN(start_yr_val) && !isNaN(start_day_val)){
         standards.plot_tmin.setFullYear(start_yr_val);
         standards.plot_tmin.setMonth(start_mo_val);
-        standards.plot_tmin.setDate(start_day_val-1);
+        standards.plot_tmin.setDate(start_day_val);
+        standards.plot_tmin.setHours(0, 0, 0);
     } else {
         alert("Not a valid number for starting year and/or day");
     }
@@ -177,10 +183,11 @@ function updateFilters() {
         standards.plot_tmax.setFullYear(end_yr_val);
         standards.plot_tmax.setMonth(end_mo_val);
         standards.plot_tmax.setDate(end_day_val);
-        standards.plot_tmin.setHours(23,59,59);
+        standards.plot_tmax.setHours(23,59,59);
     } else {
         alert("Not a valid number for ending year and/or day");
-    }*/
+    }
+    console.log(standards.plot_tmin, standards.plot_tmax);
     createPlot();
     return;
 }
