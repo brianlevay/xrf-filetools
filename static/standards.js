@@ -8,7 +8,10 @@ let standards = {
     plot_tmin: undefined,
     plot_tmax: undefined,
     plot_source: "CPS",
-    plot_data: "HeightAbs",
+    plot_lineMain: "Ca_Ka",
+    plot_lineData: "HeightAbs",
+    plot_lineTop: "Si_Ka",
+    plot_lineBase: "Ca_Ka",
     vals_kVp: {},
     vals_mA: {}
 };
@@ -66,64 +69,83 @@ function xValue(d) {
 function yValue(d) {
     if (standards.plot_source === "CPS") {
         return d["SPE"]["CPS"];
-    } else {
-        if(d["Lines"].hasOwnProperty(standards.plot_source)) {
-            return d["Lines"][standards.plot_source][standards.plot_data];
+    } else if (standards.plot_source === "line") {
+        if(d["Lines"].hasOwnProperty(standards.plot_lineMain)) {
+            return d["Lines"][standards.plot_lineMain][standards.plot_lineData];
         } else {
-            return 0;
+            return -1;
         }
+    } else if (standards.plot_source === "ratio") {
+        if(d["Lines"].hasOwnProperty(standards.plot_lineTop) &&
+            d["Lines"].hasOwnProperty(standards.plot_lineBase)) {
+            return d["Lines"][standards.plot_lineTop]["HeightAbs"] / 
+                d["Lines"][standards.plot_lineBase]["HeightAbs"];
+        } else {
+            return -1;
+        }
+    } else {
+        return -1;
     }
 }
 
 function yLabel() {
     if (standards.plot_source === "CPS") {
         return "CPS";
+    } else if (standards.plot_source === "line") {
+        return standards.plot_lineMain + "  " + standards.plot_lineData;
+    } else if (standards.plot_source === "ratio") {
+        return standards.plot_lineTop + " / " + standards.plot_lineBase;
     } else {
-        if (standards.plot_data === "HeightAbs") {
-            return standards.plot_source + " " + "Height, Abs";
-        } else if (standards.plot_data === "HeightRel") {
-            return standards.plot_source + " " + "Height, Rel";
-        } else {
-            return standards.plot_source + " " + "Channel";
-        }
+        return "None";
     }
 }
 
 // Functions for updating the plot filters and initializing the UI //
 
 function updateUI() {
-    let list_kVp = document.getElementById("list_kVp");
-    let list_filter = document.getElementById("list_filter");
-    let list_mA = document.getElementById("list_mA");
+    let radio_sources = document.getElementsByName('source');
+    let select_lineMain = document.getElementById("select_lineMain");
+    let select_lineData = document.getElementById("select_lineData");
+    let select_lineTop = document.getElementById("select_lineTop");
+    let select_lineBase = document.getElementById("select_lineBase");
+    let select_kVp = document.getElementById("select_kVp");
+    let select_filter = document.getElementById("select_filter");
+    let select_mA = document.getElementById("select_mA");
     let start_yr = document.getElementById("start_yr");
     let start_mo = document.getElementById("start_mo");
     let start_day = document.getElementById("start_day");
     let end_yr = document.getElementById("end_yr");
     let end_mo = document.getElementById("end_mo");
     let end_day = document.getElementById("end_day");
-    let list_source = document.getElementById("list_source");
-    let list_data = document.getElementById("list_data");
     
-    removeOptions(list_kVp);
-    removeOptions(list_mA);
+    for(let i = 0; i < radio_sources.length; i++){
+        if(radio_sources[i].value == standards.plot_source){
+            radio_sources[i].checked = true;
+            break;
+        }
+        
+    }
+    select_lineMain.value = standards.plot_lineMain;
+    select_lineData.value = standards.plot_lineData;
+    select_lineTop.value = standards.plot_lineTop;
+    select_lineBase.value = standards.plot_lineBase;
+    removeOptions(select_kVp);
+    removeOptions(select_mA);
     for (let val in standards.vals_kVp) {
         let option = document.createElement("option");
         option.text = val;
         option.value = val;
-        list_kVp.add(option);
+        select_kVp.add(option);
     }
     for (let val in standards.vals_mA) {
         let option = document.createElement("option");
         option.text = val;
         option.value = val;
-        list_mA.add(option);
+        select_mA.add(option);
     }
-    list_kVp.value = standards.plot_kVp;
-    list_filter.value = standards.plot_filter;
-    list_mA.value = standards.plot_mA;
-    list_source.value = standards.plot_source;
-    list_data.value = standards.plot_data;
-    
+    select_kVp.value = standards.plot_kVp;
+    select_filter.value = standards.plot_filter;
+    select_mA.value = standards.plot_mA;
     start_yr.value = standards.plot_tmin.getFullYear();
     start_mo.value = standards.plot_tmin.getMonth();
     start_day.value = standards.plot_tmin.getDate();
@@ -140,25 +162,35 @@ function removeOptions(select) {
 }
 
 function updateFilters() {
-    let list_kVp = document.getElementById("list_kVp");
-    let list_filter = document.getElementById("list_filter");
-    let list_mA = document.getElementById("list_mA");
+    let radio_sources = document.getElementsByName('source');
+    let select_lineMain = document.getElementById("select_lineMain");
+    let select_lineData = document.getElementById("select_lineData");
+    let select_lineTop = document.getElementById("select_lineTop");
+    let select_lineBase = document.getElementById("select_lineBase");
+    let select_kVp = document.getElementById("select_kVp");
+    let select_filter = document.getElementById("select_filter");
+    let select_mA = document.getElementById("select_mA");
     let start_yr = document.getElementById("start_yr");
     let start_mo = document.getElementById("start_mo");
     let start_day = document.getElementById("start_day");
     let end_yr = document.getElementById("end_yr");
     let end_mo = document.getElementById("end_mo");
     let end_day = document.getElementById("end_day");
-    let list_source = document.getElementById("list_source");
-    let list_data = document.getElementById("list_data");
     
-    standards.plot_kVp = (+list_kVp.value);
-    standards.plot_filter = list_filter.value;
-    standards.plot_mA = (+list_mA.value);
-    standards.plot_source = list_source.value;
-    standards.plot_data = list_data.value;
+    for(let i = 0; i < radio_sources.length; i++){
+        if(radio_sources[i].checked){
+            standards.plot_source = radio_sources[i].value;
+            break;
+        }
+    }
+    standards.plot_lineMain = select_lineMain.value;
+    standards.plot_lineData = select_lineData.value;
+    standards.plot_lineTop = select_lineTop.value;
+    standards.plot_lineBase = select_lineBase.value;
+    standards.plot_kVp = (+select_kVp.value);
+    standards.plot_filter = select_filter.value;
+    standards.plot_mA = (+select_mA.value);
     
-    console.log(standards.plot_tmin, standards.plot_tmax);
     let start_yr_val = (+start_yr.value);
     let start_mo_val = (+start_mo.value);
     let start_day_val = (+start_day.value);
@@ -181,7 +213,6 @@ function updateFilters() {
     } else {
         alert("Not a valid number for ending year and/or day");
     }
-    console.log(standards.plot_tmin, standards.plot_tmax);
     createPlot();
     return;
 }

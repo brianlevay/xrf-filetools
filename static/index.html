@@ -22,84 +22,131 @@
                     </div>
                 </section>
                 <section id="stdsFilterSect" class="pageSect">
-                    <div>
-                        <span class="filterType">Conditions:</span>
-                        <label>kVp</label>
-                        <select id="list_kVp"></select>
-                        <label>Filter</label>
-                        <select id="list_filter">
-                            <option value="No-Filter">No-Filter</option>
-                            <option value="Al">Al</option>
-                            <option value="Pd-Thin">Pd-Thin</option>
-                            <option value="Pd-Thick">Pd-Thick</option>
-                            <option value="Cu">Cu</option>
-                        </select>
-                        <label>mA</label>
-                        <select id="list_mA"></select>
+                    <div class="filterType">
+                        <span>Values to Plot:</span><br>
+                        <div>
+                            <input type="radio" id="radioCPS" name="source" value="CPS">
+                            <label class="dataTypeLabel">CPS</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="radioLine" name="source" value="line">
+                            <label class="dataTypeLabel">Line</label>
+                            <select id="select_lineMain">
+                                <option value="Al_Ka">Al_Ka</option>
+                                <option value="Si_Ka">Si_Ka</option>
+                                <option value="Rh_La">Rh_La</option>
+                                <option value="K_Ka">K_Ka</option>
+                                <option value="Ca_Ka">Ca_Ka</option>
+                                <option value="Ca_Kb">Ca_Kb</option>
+                                <option value="Fe_Ka">Fe_Ka</option>
+                                <option value="Fe_Kb">Fe_Kb</option>
+                            </select>
+                            <select id="select_lineData">
+                                <option value="HeightAbs">Height</option>
+                                <option value="Channel">Channel</option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="radio" id="radioRatio" name="source" value="ratio">
+                            <label class="dataTypeLabel">Ratio</label>
+                            <select id="select_lineTop">
+                                <option value="Al_Ka">Al_Ka</option>
+                                <option value="Si_Ka">Si_Ka</option>
+                                <option value="Rh_La">Rh_La</option>
+                                <option value="K_Ka">K_Ka</option>
+                                <option value="Ca_Ka">Ca_Ka</option>
+                                <option value="Ca_Kb">Ca_Kb</option>
+                                <option value="Fe_Ka">Fe_Ka</option>
+                                <option value="Fe_Kb">Fe_Kb</option>
+                            </select>
+                            <select id="select_lineBase">
+                                <option value="Al_Ka">Al_Ka</option>
+                                <option value="Si_Ka">Si_Ka</option>
+                                <option value="Rh_La">Rh_La</option>
+                                <option value="K_Ka">K_Ka</option>
+                                <option value="Ca_Ka">Ca_Ka</option>
+                                <option value="Ca_Kb">Ca_Kb</option>
+                                <option value="Fe_Ka">Fe_Ka</option>
+                                <option value="Fe_Kb">Fe_Kb</option>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <span class="filterType">Start Date:</span>
-                        <label>Year</label>
-                        <input class="inputYr" id="start_yr"></input>
-                        <label>Month</label>
-                        <select id="start_mo">
-                            <option value=0>January</option>
-                            <option value=1>February</option>
-                            <option value=2>March</option>
-                            <option value=3>April</option>
-                            <option value=4>May</option>
-                            <option value=5>June</option>
-                            <option value=6>July</option>
-                            <option value=7>August</option>
-                            <option value=8>September</option>
-                            <option value=9>October</option>
-                            <option value=10>November</option>
-                            <option value=11>December</option>
-                        </select>
-                        <label>Day</label>
-                        <input class="inputDay" id="start_day"></input>
+                    <div class="filterType">
+                        <span>Conditions:</span>
+                        <div>
+                            <label>kVp</label>
+                            <select id="select_kVp"></select>
+                        </div>
+                        <div>
+                            <label>Filter</label>
+                            <select id="select_filter">
+                                <option value="No-Filter">No-Filter</option>
+                                <option value="Al">Al</option>
+                                <option value="Pd-Thin">Pd-Thin</option>
+                                <option value="Pd-Thick">Pd-Thick</option>
+                                <option value="Cu">Cu</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>mA</label>
+                            <select id="select_mA"></select>
+                        </div>
                     </div>
-                    <div>
-                        <span class="filterType">End Date:</span>
-                        <label>Year</label>
-                        <input class="inputYr" id="end_yr"></input>
-                        <label>Month</label>
-                        <select id="end_mo">
-                            <option value=0>January</option>
-                            <option value=1>February</option>
-                            <option value=2>March</option>
-                            <option value=3>April</option>
-                            <option value=4>May</option>
-                            <option value=5>June</option>
-                            <option value=6>July</option>
-                            <option value=7>August</option>
-                            <option value=8>September</option>
-                            <option value=9>October</option>
-                            <option value=10>November</option>
-                            <option value=11>December</option>
-                        </select>
-                        <label>Day</label>
-                        <input class="inputDay" id="end_day"></input>
+                    <div class="filterType">
+                        <span>Start Date:</span>
+                        <div>
+                            <label>Year</label>
+                            <input class="inputYr" id="start_yr"></input>
+                        </div>
+                        <div>
+                            <label>Month</label>
+                            <select id="start_mo">
+                                <option value=0>January</option>
+                                <option value=1>February</option>
+                                <option value=2>March</option>
+                                <option value=3>April</option>
+                                <option value=4>May</option>
+                                <option value=5>June</option>
+                                <option value=6>July</option>
+                                <option value=7>August</option>
+                                <option value=8>September</option>
+                                <option value=9>October</option>
+                                <option value=10>November</option>
+                                <option value=11>December</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Day</label>
+                            <input class="inputDay" id="start_day"></input>
+                        </div>
                     </div>
-                    <div>
-                        <span class="filterType">Values to Plot:</span>
-                        <label>Source</label>
-                        <select id="list_source">
-                            <option value="CPS">CPS</option>
-                            <option value="Al_Ka">Al_Ka</option>
-                            <option value="Si_Ka">Si_Ka</option>
-                            <option value="Rh_La">Rh_La</option>
-                            <option value="K_Ka">K_Ka</option>
-                            <option value="Ca_Ka">Ca_Ka</option>
-                            <option value="Ca_Kb">Ca_Kb</option>
-                            <option value="Fe_Ka">Fe_Ka</option>
-                            <option value="Fe_Kb">Fe_Kb</option>
-                        </select>
-                        <label>Line Data</label>
-                        <select id="list_data">
-                            <option value="HeightAbs">Height</option>
-                            <option value="Channel">Channel</option>
-                        </select>
+                    <div class="filterType">
+                        <span>End Date:</span>
+                        <div>
+                            <label>Year</label>
+                            <input class="inputYr" id="end_yr"></input>
+                        </div>
+                        <div>
+                            <label>Month</label>
+                            <select id="end_mo">
+                                <option value=0>January</option>
+                                <option value=1>February</option>
+                                <option value=2>March</option>
+                                <option value=3>April</option>
+                                <option value=4>May</option>
+                                <option value=5>June</option>
+                                <option value=6>July</option>
+                                <option value=7>August</option>
+                                <option value=8>September</option>
+                                <option value=9>October</option>
+                                <option value=10>November</option>
+                                <option value=11>December</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Day</label>
+                            <input class="inputDay" id="end_day"></input>
+                        </div>
                     </div>
                     <div class="buttonDiv">
                         <button id="updateFilters" type="button" onclick="updateFilters()">Update Plot</button>
