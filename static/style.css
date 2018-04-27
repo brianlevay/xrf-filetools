@@ -55,20 +55,14 @@ body {
     text-align: left;
 }
 
+.filterSet {
+    display: flex;
+}
+
 .filterType {
-    display: inline-block;
+    flex: 1;
     padding: 5px;
     border: 1px solid black;
-}
-
-input[type="text"] {
-    width: 50%;
-    min-width: 200px;
-    margin: 5px;
-}
-
-.inputDiv span {
-    font-size: 1.0em;
 }
 
 button {

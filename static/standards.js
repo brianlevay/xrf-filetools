@@ -44,6 +44,7 @@ function filterPoint(d) {
     let sizePass = false;
     let excitePass = false;
     let datePass = false;
+    let valuePass = false;
     let meta = d["SPE"];
     if ((meta["X"] == 50) || (meta["X"] == 100) || (meta["X"] == 150)) {
         xPass = true;
@@ -59,7 +60,10 @@ function filterPoint(d) {
     if ((meta["Date"] >= standards.plot_tmin) && (meta["Date"] <= standards.plot_tmax)) {
         datePass = true;
     }
-    return xPass && sizePass && excitePass && datePass;
+    if (yValue(d) != -1) {
+        valuePass = true;
+    }
+    return xPass && sizePass && excitePass && datePass && valuePass;
 }
 
 function xValue(d) {
@@ -267,22 +271,30 @@ svg.append("text")
     .text("CPS");
         
 let series = [50,100,150];
-let legendY = height - 100;
 let legend = svg.selectAll(".legend")
     .data(series)
     .enter().append("g")
     .attr("class", "legend")
-    .attr("transform", function(d,i) { return "translate(0," + (legendY + (i * 25)) + ")"; });
+    .attr("transform", function(d) { 
+        return "translate(" + 20 + "," + (-25) + ")"; 
+    });
 
 legend.append("rect")
-    .attr("x", width-20)
-    .attr("width", 20)
-    .attr("height", 20)
+    .attr("x", function(d,i) { return (i * 35 + 100); })
+    .attr("width", 25)
+    .attr("height", 25)
     .style("fill", color);
+
+legend.append("text")
+    .attr("x", 10)
+    .attr("y", 0)
+    .attr("dy", "1.2em")
+    .style("text-anchor", "start")
+    .text("X Position");
     
 legend.append("text")
-    .attr("x", width-25)
-    .attr("y", 10)
+    .attr("x", function(d,i) { return (i * 35 + 120); })
+    .attr("y", -15)
     .attr("dy", "0.5em")
     .style("text-anchor", "end")
     .text(function(d) { return d; });
