@@ -28,7 +28,7 @@ func ReadConfig() *Configuration {
 	fileRows = strings.Split(fileStr, "\n")
 	nRows := len(fileRows)
 	for i := 0; i < nRows; i++ {
-		rowPts = strings.Split(fileRows[i], ":")
+		rowPts = strings.Split(fileRows[i], "=")
 		key = strings.Trim(rowPts[0], " ")
 		value = strings.Trim(rowPts[1], " ")
 		if key == "UTCoffset" {

@@ -32,9 +32,7 @@ func getPeaks(inflections [][]float64, peakCutoff float64) []*Peak {
 
 func getInflections(counts []float64) [][]float64 {
 	var inflections [][]float64
-	var delPrev, delNext float64
 	var row []float64
-
 	nChannels := int(math.Min(float64(maxChannel), float64(len(counts))))
 	row = make([]float64, 3)
 	row[0] = 0
@@ -42,25 +40,23 @@ func getInflections(counts []float64) [][]float64 {
 	row[2] = -1
 	inflections = append(inflections, row)
 	for i := 1; i < (nChannels - 1); i++ {
-		delPrev = counts[i] - counts[i-1]
-		delNext = counts[i+1] - counts[i]
-		if (delPrev > 0) && (delNext < 0) {
-			row = make([]float64, 3)
-			row[0] = float64(i)
-			row[1] = counts[i]
-			row[2] = 1
-			inflections = append(inflections, row)
-		} else if (delPrev < 0) && (delNext > 0) {
+		if (counts[i] <= counts[i-1]) && (counts[i+1] > counts[i]) {
 			row = make([]float64, 3)
 			row[0] = float64(i)
 			row[1] = counts[i]
 			row[2] = -1
 			inflections = append(inflections, row)
+		} else if (counts[i] > counts[i-1]) && (counts[i+1] <= counts[i]) {
+			row = make([]float64, 3)
+			row[0] = float64(i)
+			row[1] = counts[i]
+			row[2] = 1
+			inflections = append(inflections, row)
 		}
 	}
 	row = make([]float64, 3)
-	row[0] = float64(len(counts) - 1)
-	row[1] = counts[len(counts)-1]
+	row[0] = float64(nChannels - 1)
+	row[1] = counts[nChannels-1]
 	row[2] = -1
 	inflections = append(inflections, row)
 	return inflections
