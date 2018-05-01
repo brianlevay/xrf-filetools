@@ -26,28 +26,14 @@ function disableBtn(buttonName, toDisable) {
 //// For standards plotting ////
 
 function getStandardsAPI() {
-    var xhttp;
+    let xhttp;
     xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             handlePlotResponse(this);
         }
     };
-    xhttp.open("GET", "/get_stds", true);
-    xhttp.send();
-    disableBtn("updateStds", true);
-    disableBtn("updateFilters", true);
-}
-
-function updateStandardsAPI() {
-    var xhttp;
-    xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            handlePlotResponse(this);
-        }
-    };
-    xhttp.open("GET", "/update_stds", true);
+    xhttp.open("GET", "/standards", true);
     xhttp.send();
     disableBtn("updateStds", true);
     disableBtn("updateFilters", true);
@@ -66,6 +52,28 @@ function handlePlotResponse(xhttp) {
     }
     disableBtn("updateStds", false);
     disableBtn("updateFilters", false);
+}
+
+//// For section plotting ////
+
+function getSectionAPI() {
+    let sectionPath = document.getElementById("sectionPath").value;
+    let postStr = encodeURI("sectionPath=" + sectionPath);
+    if (sectionPath == "") {
+        showError("No path provided for section");
+        return;
+    }
+    let xhttp;
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            handlePlotResponse(this);
+        }
+    };
+    xhttp.open("POST", "/section", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(postStr);
+    disableBtn("updateStds", true);
 }
 
 //// Initial calls on page load ////

@@ -8,7 +8,7 @@ import (
 )
 
 func setSectionHandler(config *conf.Configuration) {
-	http.HandleFunc("/get_section", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/section", func(w http.ResponseWriter, r *http.Request) {
 		var resp []byte
 		errP := r.ParseForm()
 		if errP != nil {
