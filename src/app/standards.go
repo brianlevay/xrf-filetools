@@ -1,43 +1,19 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
+	batch "batchProcess"
 	"net/http"
-	stds "stdsProcess"
 )
 
-func setStandardsHandler(stds *stds.Standards) {
+func setStandardsHandler(stds *batch.BatchSpectra) {
 	http.HandleFunc("/get_stds", func(w http.ResponseWriter, r *http.Request) {
-		resp := createResponse(stds)
+		resp := batchResponse(stds)
 		w.Write(resp)
 	})
 
 	http.HandleFunc("/update_stds", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Updating standards with new data...")
-		stds.UpdateStds()
-		log.Println("Standards updating complete.")
-		resp := createResponse(stds)
+		stds.UpdateBatch()
+		resp := batchResponse(stds)
 		w.Write(resp)
 	})
-}
-
-func createResponse(stds *stds.Standards) []byte {
-	var errStart []byte = []byte("{\"Error\":")
-	var dataStart []byte = []byte("{\"Data\":")
-	var end []byte = []byte("}")
-	var resp []byte
-	if stds.Error != nil {
-		resp = append(errStart, []byte(stds.Error.Error())...)
-	} else {
-		dataJSON, errJSON := json.Marshal(stds.List)
-		if errJSON != nil {
-			log.Println(errJSON)
-			resp = append(errStart, []byte(errJSON.Error())...)
-		} else {
-			resp = append(dataStart, dataJSON...)
-		}
-	}
-	resp = append(resp, end...)
-	return resp
 }

@@ -9,15 +9,15 @@ import (
 
 type Configuration struct {
 	UTCoffset  string  `json:"-"`
-	StdsPath   string  `json:"-"`
 	Threshold  float64 `json:"-"`
 	GainMinKeV float64 `json:"-"`
 	GainMaxKeV float64 `json:"-"`
 }
 
-func ReadConfig() *Configuration {
+func ReadConfig() (string, *Configuration) {
 	var fileRows, rowPts []string
 	var key, value string
+	var stdsPath string
 
 	config := new(Configuration)
 	fileBytes, err := ioutil.ReadFile("configuration.cfg")
@@ -31,10 +31,10 @@ func ReadConfig() *Configuration {
 		rowPts = strings.Split(fileRows[i], "=")
 		key = strings.Trim(rowPts[0], " ")
 		value = strings.Trim(rowPts[1], " ")
-		if key == "UTCoffset" {
+		if key == "StdsPath" {
+			stdsPath = value
+		} else if key == "UTCoffset" {
 			config.UTCoffset = value
-		} else if key == "StdsPath" {
-			config.StdsPath = value
 		} else if key == "Threshold" {
 			config.Threshold, err = strconv.ParseFloat(value, 64)
 			if err != nil {
@@ -52,5 +52,5 @@ func ReadConfig() *Configuration {
 			}
 		}
 	}
-	return config
+	return stdsPath, config
 }
