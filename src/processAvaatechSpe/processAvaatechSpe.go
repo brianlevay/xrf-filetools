@@ -13,6 +13,8 @@ func Process(spePath string, config *conf.Configuration) (*Spectrum, error) {
 	}
 	spect.SPE = spe
 	spect.ModelPeaks(config.Threshold)
-	spect.AssignPeaks(config.GainMinKeV, config.GainMaxKeV)
+	spect.AssignPrimaryLines(config.GainMinKeV, config.GainMaxKeV)
+	spect.CalculateEnergyScale(config.GainMidKeV)
+	spect.AssignSecondaryLines()
 	return spect, nil
 }

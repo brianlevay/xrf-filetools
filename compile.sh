@@ -2,6 +2,12 @@
 
 OPTION=$1
 
+go install configureSpe
+go install readAvaatechSpe
+go install processAvaatechSpe
+go install batchProcess
+go install app
+
 if [ $1 -eq 1 ]
 then
     export GOOS=linux

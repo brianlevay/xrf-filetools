@@ -9,7 +9,7 @@ let standards = {
     plot_tmax: undefined,
     plot_source: "CPS",
     plot_lineMain: "Ca_Ka",
-    plot_lineData: "HeightAbs",
+    plot_lineData: "Height",
     plot_lineTop: "Si_Ka",
     plot_lineBase: "Ca_Ka",
     vals_kVp: {},
@@ -82,8 +82,8 @@ function yValue(d) {
     } else if (standards.plot_source === "ratio") {
         if(d["Lines"].hasOwnProperty(standards.plot_lineTop) &&
             d["Lines"].hasOwnProperty(standards.plot_lineBase)) {
-            return d["Lines"][standards.plot_lineTop]["HeightAbs"] / 
-                d["Lines"][standards.plot_lineBase]["HeightAbs"];
+            return d["Lines"][standards.plot_lineTop]["Height"] / 
+                d["Lines"][standards.plot_lineBase]["Height"];
         } else {
             return -1;
         }

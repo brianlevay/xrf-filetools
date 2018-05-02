@@ -21,8 +21,7 @@ func getPeaks(inflections [][]float64, peakCutoff float64) []*Peak {
 			if heightAve >= peakCutoff {
 				peak = new(Peak)
 				peak.Channel = inflections[i][0]
-				peak.HeightAbs = inflections[i][1]
-				peak.HeightRel = heightAve
+				peak.Height = inflections[i][1]
 				peakList = append(peakList, peak)
 			}
 		}

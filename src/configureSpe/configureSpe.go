@@ -11,6 +11,7 @@ type Configuration struct {
 	UTCoffset  string  `json:"-"`
 	Threshold  float64 `json:"-"`
 	GainMinKeV float64 `json:"-"`
+	GainMidKeV float64 `json:"-"`
 	GainMaxKeV float64 `json:"-"`
 }
 
@@ -44,6 +45,11 @@ func ReadConfig() (string, *Configuration) {
 			config.GainMinKeV, err = strconv.ParseFloat(value, 64)
 			if err != nil {
 				config.GainMinKeV = 0.01980
+			}
+		} else if key == "GainMidKeV" {
+			config.GainMidKeV, err = strconv.ParseFloat(value, 64)
+			if err != nil {
+				config.GainMidKeV = 0.02000
 			}
 		} else if key == "GainMaxKeV" {
 			config.GainMaxKeV, err = strconv.ParseFloat(value, 64)
