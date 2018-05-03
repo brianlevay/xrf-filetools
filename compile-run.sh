@@ -2,6 +2,7 @@
 
 echo "BASH: Started build at: $(date)"
 go install configureSpe
+go install snip
 go install readAvaatechSpe
 go install processAvaatechSpe
 go install batchProcess

@@ -4,8 +4,6 @@ import (
 	"time"
 )
 
-const defaultChannelN int = 2048
-
 type SPE struct {
 	FilePath string    `json:"-"`
 	FileName string    `json:"-"`
@@ -41,5 +39,4 @@ func (spe *SPE) Initialize() {
 	spe.X = 0.0
 	spe.Y = 0.0
 	spe.CPS = 0
-	spe.Counts = make([]float64, defaultChannelN)
 }

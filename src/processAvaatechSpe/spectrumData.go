@@ -6,7 +6,7 @@ import (
 
 type Spectrum struct {
 	SPE        *spereader.SPE   `json:"SPE"`
-	Background []float64        `json:"-"`
+	MaxChannel int              `json:"-"`
 	Signal     []float64        `json:"-"`
 	Peaks      []*Peak          `json:"-"`
 	Lines      map[string]*Peak `json:"Lines"`
@@ -18,4 +18,5 @@ type Spectrum struct {
 type Peak struct {
 	Channel float64 `json:"Channel"`
 	Height  float64 `json:"Height"`
+	Total   float64 `json:"Total"`
 }

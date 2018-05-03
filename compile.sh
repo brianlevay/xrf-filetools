@@ -3,6 +3,7 @@
 OPTION=$1
 
 go install configureSpe
+go install snip
 go install readAvaatechSpe
 go install processAvaatechSpe
 go install batchProcess

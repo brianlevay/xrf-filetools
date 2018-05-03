@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const defaultChannelN int = 2048
+
 func (spe *SPE) ParseFileContents(UTCoffset string) error {
 	var nextRow string
 	var measureTimes []string
@@ -70,16 +72,19 @@ func convertContentDate(dateStr string, UTCoffset string) (time.Time, error) {
 
 func getChannelCounts(channelBounds string, channelRows []string) []float64 {
 	var counts []float64
-	var i, j, n, nrows, ncols int
+	var i, j, n, nMax, nrows, ncols int
 	var row, channelVal string
 	var rowPts []string
 	var errCts error
 
 	channelBoundPts := strings.Split(channelBounds, " ")
 	maxCh, errCh := strconv.ParseInt(channelBoundPts[len(channelBoundPts)-1], 10, 64)
-	if errCh == nil {
+	if (errCh == nil) && (maxCh >= 0) {
 		counts = make([]float64, (maxCh + 1))
+	} else {
+		counts = make([]float64, defaultChannelN)
 	}
+	nMax = len(counts)
 	n = 0
 	nrows = len(channelRows)
 	for i = 0; i < nrows; i++ {
@@ -88,7 +93,7 @@ func getChannelCounts(channelBounds string, channelRows []string) []float64 {
 		ncols = len(rowPts)
 		for j = 0; j < ncols; j++ {
 			channelVal = strings.Replace(rowPts[j], " ", "", -1)
-			if channelVal != "" {
+			if (n < nMax) && (channelVal != "") {
 				counts[n], errCts = strconv.ParseFloat(rowPts[j], 64)
 				if errCts != nil {
 					counts[n] = 0
