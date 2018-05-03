@@ -5,12 +5,14 @@ import (
 )
 
 type Spectrum struct {
-	SPE    *spereader.SPE   `json:"SPE"`
-	Peaks  []*Peak          `json:"-"`
-	Lines  map[string]*Peak `json:"Lines"`
-	Gain   float64          `json:"-"`
-	Offset float64          `json:"-"`
-	R2     float64          `json:"-"`
+	SPE        *spereader.SPE   `json:"SPE"`
+	Background []float64        `json:"-"`
+	Signal     []float64        `json:"-"`
+	Peaks      []*Peak          `json:"-"`
+	Lines      map[string]*Peak `json:"Lines"`
+	Gain       float64          `json:"-"`
+	Offset     float64          `json:"-"`
+	R2         float64          `json:"-"`
 }
 
 type Peak struct {

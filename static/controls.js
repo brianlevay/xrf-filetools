@@ -54,28 +54,6 @@ function handlePlotResponse(xhttp) {
     disableBtn("updateFilters", false);
 }
 
-//// For section plotting ////
-
-function getSectionAPI() {
-    let sectionPath = document.getElementById("sectionPath").value;
-    let postStr = encodeURI("sectionPath=" + sectionPath);
-    if (sectionPath == "") {
-        showError("No path provided for section");
-        return;
-    }
-    let xhttp;
-    xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            handlePlotResponse(this);
-        }
-    };
-    xhttp.open("POST", "/section", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(postStr);
-    disableBtn("updateStds", true);
-}
-
 //// Initial calls on page load ////
 
 document.addEventListener('DOMContentLoaded', function(){ 
